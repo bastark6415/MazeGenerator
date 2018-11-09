@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MazeGenerator"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Maze Generator" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -46,12 +46,21 @@
                     <Button x:Name="ButtonSearch" Content="Search" HorizontalAlignment="Stretch"
                             Margin="0, 0, 0, 10" DockPanel.Dock="Top"/>
                     <ListBox x:Name="ListBoxPathes">
-                        <ListBoxItem Content="tgakldg" Margin="5"/>
-                        <ListBoxItem Content="tgakldg" Margin="5"/>
-                        <ListBoxItem Content="tgakldg" Margin="5"/>
-                        <ListBoxItem Content="tgakldg" Margin="5"/>
-                        <ListBoxItem Content="tgakldg" Margin="5"/>
-                        <ListBoxItem Content="tgakldg" Margin="5"/>
+                        <ListBoxItem  Margin="5">
+                            <CheckBox Content="Path #1"/>
+                        </ListBoxItem>
+                        <ListBoxItem  Margin="5">
+                            <CheckBox Content="Path #2"/>
+                        </ListBoxItem>
+                        <ListBoxItem  Margin="5">
+                            <CheckBox Content="Path #3"/>
+                        </ListBoxItem>
+                        <ListBoxItem  Margin="5">
+                            <CheckBox Content="Path ..."/>
+                        </ListBoxItem>
+                        <ListBoxItem  Margin="5">
+                            <CheckBox Content="Path #n"/>
+                        </ListBoxItem>
                     </ListBox>
                 </DockPanel>
             </Border>
