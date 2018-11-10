@@ -25,5 +25,14 @@ namespace MazeGenerator
 		{
 			InitializeComponent();
 		}
+
+		private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
+		{
+			MazeGenerator.Generate.Generator generator = new MazeGenerator.Generate.EllerAlgorithm(
+				(ushort)UpDownHeight.Value, (ushort)UpDownWidth.Value);
+			bool tmp = true;
+			generator.Generate(false, ref tmp);
+			ImageMaze.Source = generator.ToBitmap();
+		}
 	}
 }
