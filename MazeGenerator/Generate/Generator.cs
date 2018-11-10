@@ -69,10 +69,7 @@ namespace MazeGenerator.Generate
 			for (int i = 0; i < this.height; ++i)
 				for (int y = 0; y < wall + cell; ++y)
 				{
-					if (mapMatrix[i, this.width - 1].right)
-						color = Colors.Black;
-					else
-						color = Colors.White;
+					color = Colors.Black;
 					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride] = color.B;
 					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 1] = color.G;
 					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 2] = color.R;
@@ -81,10 +78,7 @@ namespace MazeGenerator.Generate
 			for (int j = 0; j < this.width; ++j)
 				for (int x = 0; x < wall + cell; ++x)
 				{
-					if (mapMatrix[this.height - 1, j].down)
-						color = Colors.Black;
-					else
-						color = Colors.White;
+					color = Colors.Black;
 					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4] = color.B;
 					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 1] = color.G;
 					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 2] = color.R;
