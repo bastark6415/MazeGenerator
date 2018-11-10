@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MazeGenerator.Types
 {
-    public class Point
+    public struct Point
     {
 		public ushort x, y;
     }

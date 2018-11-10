@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MazeGenerator.Types
 {
-	public class Cell
+	public struct Cell
 	{
 		public bool left, up, right, down;
 	}
