@@ -53,29 +53,43 @@ namespace MazeGenerator.Generate
 			byte[] pixels = new byte[height * stride];
 			Color color;
 			for (int i = 0; i < this.height; ++i)
-			{
 				for (int j = 0; j < this.width; ++j)
-				{
 					for (int y = 0; y < wall + cell; ++y)
-					{
 						for (int x = 0; x < wall + cell; ++x)
 						{
-							if (x < wall || y < wall)
+							if ((x < wall && mapMatrix[i, j].left) || (y < wall && mapMatrix[i, j].up))
 								color = Colors.Black;
 							else
 								color = Colors.White;
-							/*pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4] = color.B;
-							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 1] = color.G;
-							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 2] = color.R;
-							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 3] = color.A;*/
-							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4] = color.B;
-							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4 + 1] = color.G;
-							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4 + 2] = color.R;
-							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4 + 3] = color.A;
+							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4] = color.B;
+							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 1] = color.G;
+							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 2] = color.R;
+							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 3] = color.A;
 						}
-					}
+			for (int i = 0; i < this.height; ++i)
+				for (int y = 0; y < wall + cell; ++y)
+				{
+					if (mapMatrix[i, this.width - 1].right)
+						color = Colors.Black;
+					else
+						color = Colors.White;
+					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride] = color.B;
+					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 1] = color.G;
+					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 2] = color.R;
+					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 3] = color.A;
 				}
-			}
+			for (int j = 0; j < this.width; ++j)
+				for (int x = 0; x < wall + cell; ++x)
+				{
+					if (mapMatrix[this.height - 1, j].down)
+						color = Colors.Black;
+					else
+						color = Colors.White;
+					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4] = color.B;
+					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 1] = color.G;
+					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 2] = color.R;
+					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 3] = color.A;
+				}
 			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 			return bitmap;
 		}
