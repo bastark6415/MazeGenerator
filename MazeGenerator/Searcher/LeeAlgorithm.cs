@@ -11,7 +11,7 @@ namespace MazeGenerator.Searcher
     public class LeeAlgorithm : Searcher
     {
 		public LeeAlgorithm(Generator generator) : base(generator) { }
-		public override void Search(bool showSteps, bool canDoNextStep)
+		public override void Search(bool showSteps, ref bool canDoNextStep)
 		{
 			throw new NotImplementedException();
 		}

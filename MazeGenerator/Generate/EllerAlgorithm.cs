@@ -9,7 +9,7 @@ namespace MazeGenerator.Generate
     public class EllerAlgorithm : Generator
     {
 		public EllerAlgorithm(ushort height, ushort width) : base(height, width) { }
-		public override void Generate(bool showSteps, bool canDoNextStep)
+		public override void Generate(bool showSteps, ref bool canDoNextStep)
 		{
 			throw new NotImplementedException();
 		}

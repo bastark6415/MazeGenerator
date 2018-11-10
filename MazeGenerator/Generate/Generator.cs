@@ -29,11 +29,11 @@ namespace MazeGenerator.Generate
 		{
 			throw new NotImplementedException();
 		}
-		public virtual void Action(bool showSteps, bool canDoNextStep)
+		public virtual void Action(bool showSteps, ref bool canDoNextStep)
 		{
-			throw new NotImplementedException();
+			Generate(showSteps, ref canDoNextStep);
 		}
-		public abstract void Generate(bool showSteps, bool canDoNextStep);
+		public abstract void Generate(bool showSteps, ref bool canDoNextStep);
 		public override string ToString()
 		{
 			throw new NotImplementedException();

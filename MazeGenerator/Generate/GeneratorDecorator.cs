@@ -13,7 +13,7 @@ namespace MazeGenerator.Generate
 		{
 			this.generator = generator;
 		}
-		sealed public override void Generate(bool showSteps, bool canDoNextStep)
+		sealed public override void Generate(bool showSteps, ref bool canDoNextStep)
 		{
 			throw new NotImplementedException();
 		}
