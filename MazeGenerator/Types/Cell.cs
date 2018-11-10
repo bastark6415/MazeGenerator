@@ -8,6 +8,6 @@ namespace MazeGenerator.Types
 {
 	public struct Cell
 	{
-		public bool left, up, right, down;
+		public bool left, up;
 	}
 }
