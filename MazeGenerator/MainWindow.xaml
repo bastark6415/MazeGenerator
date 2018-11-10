@@ -37,6 +37,7 @@
                                         Watermark="Width" x:Name="UpDownWidth"/>
                     <CheckBox Content="Show steps" IsThreeState="False" IsChecked="False"/>
                     <Button x:Name="ButtonGenerate" Content="Generate" HorizontalAlignment="Stretch"
+                            Click="ButtonGenerate_Click"
                             Margin="0, 10, 0, 0"/>
                 </StackPanel>
             </Border>
@@ -71,6 +72,7 @@
                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                    Source="C:\Users\bastark\Downloads\1.bmp"
                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   x:Name="ImageMaze"
                    SnapsToDevicePixels="True"/>
         </ScrollViewer>
     </Grid>

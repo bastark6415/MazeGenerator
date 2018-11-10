@@ -11,7 +11,13 @@ namespace MazeGenerator.Generate
 		public EllerAlgorithm(ushort height, ushort width) : base(height, width) { }
 		public override void Generate(bool showSteps, ref bool canDoNextStep)
 		{
-			throw new NotImplementedException();
+			for (int i = 0; i < height; ++i)
+			{
+				for (int j = 0; j < width; ++j)
+				{
+					mapMatrix[i,j].left = mapMatrix[i, j].right = mapMatrix[i, j].up = mapMatrix[i, j].down = true;
+				}
+			}
 		}
 	}
 }
