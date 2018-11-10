@@ -11,6 +11,7 @@ namespace MazeGenerator.Generate
 {
     public abstract class Generator
     {
+		private const ushort maxDimension = 8192;
 		public int[,] mapMatrix { get; protected set; }
 		public Point start { get; protected set; }
 		public Point finish { get; protected set; }
@@ -18,6 +19,9 @@ namespace MazeGenerator.Generate
 		public ushort width { get; protected set; }
 		public Generator(ushort height, ushort width)
 		{
+			if (height > maxDimension || width > maxDimension)
+				throw new ArgumentOutOfRangeException("height or width", 
+					$"Dimentions must not be more than {maxDimension}");
 			this.width = width;
 			this.height = height;
 			mapMatrix = new int[height, width];
