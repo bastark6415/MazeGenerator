@@ -64,10 +64,14 @@ namespace MazeGenerator.Generate
 								color = Colors.Black;
 							else
 								color = Colors.White;
-							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4] = color.B;
+							/*pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4] = color.B;
 							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 1] = color.G;
 							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 2] = color.R;
-							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 3] = color.A;
+							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 3] = color.A;*/
+							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4] = color.B;
+							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4 + 1] = color.G;
+							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4 + 2] = color.R;
+							pixels[i * stride * (cell + wall) + j * (cell + wall) * 4 + y * (cell + wall) * 4 + x * 4 + 3] = color.A;
 						}
 					}
 				}
