@@ -45,30 +45,31 @@ namespace MazeGenerator.Generate
 		}
 		public virtual BitmapSource ToBitmap()
 		{
+			int wall = 1, cell = 8;
+			int height = this.height * (cell + wall) + wall;
+			int width = this.width * (cell + wall) + wall;
 			PixelFormat pf = PixelFormats.Pbgra32;
 			int stride = (width * pf.BitsPerPixel + 7) / 8;
 			byte[] pixels = new byte[height * stride];
 			Color color;
-			for (int i = 0; i < height; ++i)
+			for (int i = 0; i < this.height; ++i)
 			{
-				for (int j = 0; j < width; ++j)
+				for (int j = 0; j < this.width; ++j)
 				{
-					switch (mapMatrix[i, j])
+					for (int y = 0; y < wall + cell; ++y)
 					{
-						case 0:
-							color = Colors.White;
-							break;
-						case -1:
-							color = Colors.Black;
-							break;
-						default:
-							color = Colors.White;
-							break;
+						for (int x = 0; x < wall + cell; ++x)
+						{
+							if (x < wall || y < wall)
+								color = Colors.Black;
+							else
+								color = Colors.White;
+							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4] = color.B;
+							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 1] = color.G;
+							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 2] = color.R;
+							pixels[(cell + wall) * (i * stride + (j + y) * 4) + x * 4 + 3] = color.A;
+						}
 					}
-					pixels[i * stride + j * 4] = color.B;
-					pixels[i * stride + j * 4 + 1] = color.G;
-					pixels[i * stride + j * 4 + 2] = color.R;
-					pixels[i * stride + j * 4 + 3] = color.A;
 				}
 			}
 			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
