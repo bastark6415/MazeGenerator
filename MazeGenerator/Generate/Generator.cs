@@ -62,7 +62,7 @@ namespace MazeGenerator.Generate
 							color = Colors.Black;
 							break;
 						default:
-							color = Colors.Red;
+							color = Colors.White;
 							break;
 					}
 					pixels[i * stride + j * 4] = color.B;
