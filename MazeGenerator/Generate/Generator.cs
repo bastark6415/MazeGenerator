@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MazeGenerator.Types;
 using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace MazeGenerator.Generate
 {
@@ -40,7 +41,34 @@ namespace MazeGenerator.Generate
 		}
 		public virtual BitmapSource ToBitmap()
 		{
-			throw new NotImplementedException();
+			PixelFormat pf = PixelFormats.Pbgra32;
+			int stride = (width * pf.BitsPerPixel + 7) / 8;
+			byte[] pixels = new byte[height * stride];
+			Color color;
+			for (int i = 0; i < height; ++i)
+			{
+				for (int j = 0; j < width; ++j)
+				{
+					switch (mapMatrix[i, j])
+					{
+						case 0:
+							color = Colors.White;
+							break;
+						case -1:
+							color = Colors.Black;
+							break;
+						default:
+							color = Colors.Red;
+							break;
+					}
+					pixels[i * stride + j * 4] = color.B;
+					pixels[i * stride + j * 4 + 1] = color.G;
+					pixels[i * stride + j * 4 + 2] = color.R;
+					pixels[i * stride + j * 4 + 3] = color.A;
+				}
+			}
+			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
+			return bitmap;
 		}
 	}
 }
