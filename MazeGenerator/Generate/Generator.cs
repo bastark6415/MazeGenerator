@@ -12,7 +12,7 @@ namespace MazeGenerator.Generate
     public abstract class Generator
     {
 		private const ushort maxDimension = 8192;
-		public int[,] mapMatrix { get; protected set; }
+		public Cell[,] mapMatrix { get; protected set; }
 		public Point start { get; protected set; }
 		public Point finish { get; protected set; }
 		public ushort height { get; protected set; }
@@ -24,7 +24,7 @@ namespace MazeGenerator.Generate
 					$"Dimentions must not be more than {maxDimension}");
 			this.width = width;
 			this.height = height;
-			mapMatrix = new int[height, width];
+			mapMatrix = new Cell[height, width];
 		}
 		public static Generator Parse(string s)
 		{

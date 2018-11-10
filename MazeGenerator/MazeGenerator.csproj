@@ -77,6 +77,7 @@
     <Compile Include="Generate\GeneratorDecorator.cs" />
     <Compile Include="Searcher\LeeAlgorithm.cs" />
     <Compile Include="Searcher\Searcher.cs" />
+    <Compile Include="Types\Cell.cs" />
     <Compile Include="Types\Path.cs" />
     <Compile Include="Types\Point.cs" />
     <Page Include="MainWindow.xaml">
