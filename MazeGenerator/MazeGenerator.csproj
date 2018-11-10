@@ -72,9 +72,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Generator\EllerAlgorithm.cs" />
-    <Compile Include="Generator\Generator.cs" />
-    <Compile Include="Generator\GeneratorDecorator.cs" />
+    <Compile Include="Generate\EllerAlgorithm.cs" />
+    <Compile Include="Generate\Generator.cs" />
+    <Compile Include="Generate\GeneratorDecorator.cs" />
     <Compile Include="Searcher\LeeAlgorithm.cs" />
     <Compile Include="Searcher\Searcher.cs" />
     <Compile Include="Types\Path.cs" />

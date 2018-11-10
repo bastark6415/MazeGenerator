@@ -69,7 +69,9 @@
         <ScrollViewer Grid.Column="1">
             <Image ScrollViewer.HorizontalScrollBarVisibility="Auto"
                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                   Source="C:\Users\bastark\Downloads\1.jpg"/>
+                   Source="C:\Users\bastark\Downloads\1.bmp"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   SnapsToDevicePixels="True"/>
         </ScrollViewer>
     </Grid>
 </Window>
