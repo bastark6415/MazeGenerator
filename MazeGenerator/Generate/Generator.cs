@@ -45,7 +45,7 @@ namespace MazeGenerator.Generate
 		}
 		public virtual BitmapSource ToBitmap()
 		{
-			int wall = 1, cell = 8;
+			int wall = 1, cell = 2;
 			int height = this.height * (cell + wall) + wall;
 			int width = this.width * (cell + wall) + wall;
 			PixelFormat pf = PixelFormats.Pbgra32;
@@ -90,6 +90,11 @@ namespace MazeGenerator.Generate
 					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 2] = color.R;
 					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 3] = color.A;
 				}
+			color = Colors.Black;
+			pixels[(wall + cell) * (this.height * stride + this.width * 4)] = color.B;
+			pixels[(wall + cell) * (this.height * stride + this.width * 4) + 1] = color.G;
+			pixels[(wall + cell) * (this.height * stride + this.width * 4) + 2] = color.R;
+			pixels[(wall + cell) * (this.height * stride + this.width * 4) + 3] = color.A;
 			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 			return bitmap;
 		}
