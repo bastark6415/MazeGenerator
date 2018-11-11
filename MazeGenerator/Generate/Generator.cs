@@ -46,6 +46,13 @@ namespace MazeGenerator.Generate
 		{
 			throw new NotImplementedException();
 		}
+		protected void SetPixelColor(ref byte[]pixels, Color c, int i, int j, int wall, int cell, int y, int x, int stride)
+		{
+			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4] = c.B;
+			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 1] = c.G;
+			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 2] = c.R;
+			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 3] = c.A;
+		}
 		public virtual BitmapSource ToBitmap()
 		{
 			int wall = 1, cell = 2;
@@ -57,41 +64,45 @@ namespace MazeGenerator.Generate
 			Color color;
 			for (int i = 0; i < this.height; ++i)
 				for (int j = 0; j < this.width; ++j)
-					for (int y = 0; y < wall + cell; ++y)
-						for (int x = 0; x < wall + cell; ++x)
-						{
-							if ((x < wall && mapMatrix[i, j].left) || (y < wall && mapMatrix[i, j].up))
-								color = Colors.Black;
-							else
-								color = Colors.White;
-							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4] = color.B;
-							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 1] = color.G;
-							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 2] = color.R;
-							pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 3] = color.A;
-						}
-			for (int i = 0; i < this.height; ++i)
-				for (int y = 0; y < wall + cell; ++y)
-				{
-					color = Colors.Black;
-					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride] = color.B;
-					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 1] = color.G;
-					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 2] = color.R;
-					pixels[(wall + cell) * (i * stride + this.width * 4) + y * stride + 3] = color.A;
+				{	
+					//drawing left wall
+					color = mapMatrix[i, j].left ? Colors.Black : Colors.White;
+					for (int y = 1; y < cell + wall; ++y)
+						SetPixelColor(ref pixels, color, i, j, wall, cell, y, 0, stride);
+					//drawing up wall
+					color = mapMatrix[i, j].up ? Colors.Black : Colors.White;
+					for (int x = 1; x < cell + wall; ++x)
+						SetPixelColor(ref pixels, color, i, j, wall, cell, 0, x, stride);
+					//drawing cell
+					color = Colors.White;
+					for (int y = 1; y < cell + wall; ++y)
+						for (int x = 1; x < cell + wall; ++x)
+							SetPixelColor(ref pixels, color, i, j, wall, cell, y, x, stride);
 				}
+			//drawing down wall
 			for (int j = 0; j < this.width; ++j)
-				for (int x = 0; x < wall + cell; ++x)
-				{
-					color = Colors.Black;
-					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4] = color.B;
-					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 1] = color.G;
-					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 2] = color.R;
-					pixels[(wall + cell) * (this.height * stride + j * 4) + x * 4 + 3] = color.A;
-				}
+			{
+				color = mapMatrix[this.height - 1, j].down ? Colors.Black : Colors.White;
+				for (int x = 1; x < cell + wall; ++x)
+					SetPixelColor(ref pixels, color, this.height - 1, j, wall, cell, wall + cell, x, stride);
+			}
+			//drawing right wall
+			for (int i = 0; i < this.height; ++i)
+			{
+				color = mapMatrix[i, this.width - 1].right ? Colors.Black : Colors.White;
+				for (int y = 1; y < cell + wall; ++y)
+					SetPixelColor(ref pixels, color, i, this.width - 1, wall, cell, y, wall + cell, stride);
+			}
+			//corners
 			color = Colors.Black;
-			pixels[(wall + cell) * (this.height * stride + this.width * 4)] = color.B;
-			pixels[(wall + cell) * (this.height * stride + this.width * 4) + 1] = color.G;
-			pixels[(wall + cell) * (this.height * stride + this.width * 4) + 2] = color.R;
-			pixels[(wall + cell) * (this.height * stride + this.width * 4) + 3] = color.A;
+			for (int i = 0; i < this.height; ++i)
+				for (int j = 0; j < this.width; ++j)
+				{
+					SetPixelColor(ref pixels, color, i, j, wall, cell, 0, 0, stride);
+					SetPixelColor(ref pixels, color, i, j, wall, cell, 0, wall + cell, stride);
+					SetPixelColor(ref pixels, color, i, j, wall, cell, wall + cell, 0, stride);
+					SetPixelColor(ref pixels, color, i, j, wall, cell, wall + cell, wall + cell, stride);
+				}
 			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 			return bitmap;
 		}
