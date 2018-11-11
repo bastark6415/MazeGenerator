@@ -28,7 +28,7 @@ namespace MazeGenerator.Generate
 								break;
 							}
 				//create right walls
-				for (int j = 0; j < width - 1; ++j) 
+				for (int j = 0; j < width - 1; ++j)
 				{
 					if (currRow[j] == currRow[j + 1])
 						SetWall(Direction.right, true, (ushort)i, (ushort)j);
@@ -42,7 +42,7 @@ namespace MazeGenerator.Generate
 							if (currRow[k] == setValue)
 								currRow[k] = currRow[j];
 					}
-						
+
 				}
 				//create down walls
 				for (int l = 1; l <= width; ++l)
@@ -82,7 +82,7 @@ namespace MazeGenerator.Generate
 			for (int j = 0; j < width; ++j)
 			{
 				SetWall(Direction.up, true, 0, (ushort)j);
-				SetWall(Direction.down, true, (ushort)(height - 1) , (ushort)j);
+				SetWall(Direction.down, true, (ushort)(height - 1), (ushort)j);
 			}
 			//random start finish
 			int dir = rand.Next(4);
@@ -133,6 +133,30 @@ namespace MazeGenerator.Generate
 					finish = tmp;
 					SetWall(Direction.up, false, finish.y, finish.x);
 					break;
+			}
+			//Removing walls
+			int WallsForRemove = rand.Next(Math.Max(width, height) / 2);
+			for (int i = 0; i < WallsForRemove; ++i)
+			{
+				int x = rand.Next(1, width - 1);
+				int y = rand.Next(1, height - 1);
+				Direction direction = Direction.left;
+				switch(rand.Next(4))
+				{
+					case 0:
+						direction = Direction.left;
+						break;
+					case 1:
+						direction = Direction.up;
+						break;
+					case 2:
+						direction = Direction.right;
+						break;
+					case 3:
+						direction = Direction.down;
+						break;
+				}
+				SetWall(direction, false, (ushort)y, (ushort)x);
 			}
 		}
 	}
