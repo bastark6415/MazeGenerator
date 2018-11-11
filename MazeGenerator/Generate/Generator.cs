@@ -55,7 +55,7 @@ namespace MazeGenerator.Generate
 		}
 		public virtual BitmapSource ToBitmap()
 		{
-			int wall = 1, cell = 2;
+			int wall = 1, cell = 10;
 			int height = this.height * (cell + wall) + wall;
 			int width = this.width * (cell + wall) + wall;
 			PixelFormat pf = PixelFormats.Pbgra32;
