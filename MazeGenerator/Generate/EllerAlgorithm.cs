@@ -26,8 +26,10 @@ namespace MazeGenerator.Generate
 								break;
 							}
 				//create right walls
-				for (int j = 0; j < width; ++j) 
+				for (int j = 0; j < width - 1; ++j) 
 				{
+					if (currRow[j] == currRow[j + 1])
+						SetWall(Direction.right, true)
 				}
 			}
 		}
