@@ -134,6 +134,30 @@ namespace MazeGenerator.Generate
 					SetWall(Direction.up, false, finish.y, finish.x);
 					break;
 			}
+			//Removing walls
+			int WallsForRemove = rand.Next(Math.Max(width, height) / 2);
+			for (int i = 0; i < WallsForRemove; ++i)
+			{
+				int x = rand.Next(1, width - 1);
+				int y = rand.Next(1, height - 1);
+				Direction direction = Direction.left;
+				switch(rand.Next(4))
+				{
+					case 0:
+						direction = Direction.left;
+						break;
+					case 1:
+						direction = Direction.up;
+						break;
+					case 2:
+						direction = Direction.right;
+						break;
+					case 3:
+						direction = Direction.down;
+						break;
+				}
+				SetWall(direction, false, (ushort)y, (ushort)x);
+			}
 		}
 	}
 }
