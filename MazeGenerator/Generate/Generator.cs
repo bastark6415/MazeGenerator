@@ -12,6 +12,7 @@ namespace MazeGenerator.Generate
     public abstract class Generator
     {
 		private const ushort maxDimension = 1024;
+		protected enum Direction { left, up, right, down}
 		public Cell[,] mapMatrix { get; protected set; }
 		public Point start { get; protected set; }
 		public Point finish { get; protected set; }
@@ -25,9 +26,6 @@ namespace MazeGenerator.Generate
 			this.width = width;
 			this.height = height;
 			mapMatrix = new Cell[height, width];
-			for (int i = 0; i < height; ++i)
-				for (int j = 0; j < width; ++j)
-					mapMatrix[i, j] = new Cell();
 		}
 		public static Generator Parse(string s)
 		{
@@ -105,6 +103,34 @@ namespace MazeGenerator.Generate
 				}
 			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 			return bitmap;
+		}
+		protected void SetWall(Direction dir, bool value, ushort y, ushort x)
+		{
+			if (y >= height || x >= width)
+				throw new ArgumentOutOfRangeException("x or y", "Coordinate must be less the size of maze");
+			switch (dir)
+			{
+				case Direction.left:
+					mapMatrix[y, x].left = value;
+					if (x != 0)
+						mapMatrix[y, x - 1].right = value;
+					break;
+				case Direction.up:
+					mapMatrix[y, x].up = value;
+					if (y != 0)
+						mapMatrix[y - 1, x].down = value;
+					break;
+				case Direction.right:
+					mapMatrix[y, x].right = value;
+					if (x != width - 1)
+						mapMatrix[y, x + 1].left = value;
+					break;
+				case Direction.down:
+					mapMatrix[y, x].down = value;
+					if (y != height - 1)
+						mapMatrix[y + 1, x].up = value;
+					break;
+			}
 		}
 	}
 }

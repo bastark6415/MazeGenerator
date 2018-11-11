@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MazeGenerator.Types;
 
 namespace MazeGenerator.Generate
 {
@@ -11,32 +12,152 @@ namespace MazeGenerator.Generate
 		public EllerAlgorithm(ushort height, ushort width) : base(height, width) { }
 		public override void Generate(bool showSteps, ref bool canDoNextStep)
 		{
-			Random random = new Random();
-			for (int i = 1; i < height - 1; ++i)
-				for (int j = 1; j < width - 1; ++j)
+			ushort[] currRow = new ushort[width];
+			bool[] usedSet = new bool[width + 1];
+			Random rand = new Random();
+			for (int i = 0; i < height - 1; ++i)
+			{
+				//assign for each cell unique set if it hasn't
+				for (int j = 0; j < width; ++j)
+					if (currRow[j] == 0)
+						for (int k = 1; k <= width; ++k)
+							if (!usedSet[k])
+							{
+								usedSet[k] = true;
+								currRow[j] = (ushort)k;
+								break;
+							}
+				//create right walls
+				for (int j = 0; j < width - 1; ++j) 
 				{
-					bool addwall = random.Next(2) == 1;
-					int dir = random.Next(4);
-					switch (dir)
+					if (currRow[j] == currRow[j + 1])
+						SetWall(Direction.right, true, (ushort)i, (ushort)j);
+					else if (rand.Next(2) == 1)
+						SetWall(Direction.right, true, (ushort)i, (ushort)j);
+					else
 					{
-						case 0:
-							mapMatrix[i, j].left = addwall;
-							mapMatrix[i, j - 1].right = addwall;
-							break;
-						case 1:
-							mapMatrix[i, j].up = addwall;
-							mapMatrix[i - 1, j].down = addwall;
-							break;
-						case 2:
-							mapMatrix[i, j].right = addwall;
-							mapMatrix[i, j + 1].left = addwall;
-							break;
-						case 3:
-							mapMatrix[i, j].down = addwall;
-							mapMatrix[i + 1, j].up = addwall;
-							break;
+						int setValue = currRow[j + 1];
+						usedSet[setValue] = false;
+						for (int k = j + 1; k < width && currRow[k] == setValue; ++k)
+							currRow[k] = currRow[j];
 					}
+						
 				}
+				//create down walls
+				for (int j = 0; j < width;)
+				{
+					int cntCellsForSet = 1;
+					int cntCreatedWalls = 0;
+					for (int k = j + 1; k < width && currRow[k] == currRow[j]; ++k)
+						++cntCellsForSet;
+					for (int k = 0; k < cntCellsForSet; ++k)
+					{
+						if (rand.Next(2) == 1)
+						{
+							SetWall(Direction.down, true, (ushort)i, (ushort)(j + k));
+							++cntCreatedWalls;
+						}
+					}
+					if (cntCreatedWalls == cntCellsForSet)
+					{
+						ushort pos = (ushort)rand.Next(cntCellsForSet);
+						SetWall(Direction.down, false, (ushort)i, (ushort)(j + pos));
+					}
+					j += cntCellsForSet;
+				}
+				//update used set
+				for (int j = 1; j <= width; ++j)
+					usedSet[j] = false;
+				//remove cells with down walls from set
+				for (int j = 0; j < width; ++j)
+					if (mapMatrix[i, j].down)
+						currRow[j] = 0;
+					else
+						usedSet[currRow[j]] = true;
+			}
+			//last row
+			//assign for each cell unique set if it hasn't
+			for (int j = 0; j < width; ++j)
+				if (currRow[j] == 0)
+					for (int k = 1; k <= width; ++k)
+						if (!usedSet[k])
+						{
+							usedSet[k] = true;
+							currRow[j] = (ushort)k;
+							break;
+						}
+			//walls
+			for (int j = 0; j < width - 1; ++j)
+				if (currRow[j] != currRow[j + 1])
+				{
+					SetWall(Direction.right, false, (ushort)(height - 1), (ushort)j);
+					int setValue = currRow[j + 1];
+					for (int k = j + 1; k < width && currRow[k] == setValue; ++k)
+						currRow[k] = currRow[j];
+				}
+			//external walls
+			//left right
+			for (int i = 0; i < height; ++i)
+			{
+				SetWall(Direction.left, true, (ushort)i, 0);
+				SetWall(Direction.right, true, (ushort)i, (ushort)(width - 1));
+			}
+			//up down
+			for (int j = 0; j < width; ++j)
+			{
+				SetWall(Direction.up, true, 0, (ushort)j);
+				SetWall(Direction.down, true, (ushort)(height - 1) , (ushort)j);
+			}
+			//random start finish
+			int dir = rand.Next(4);
+			Point tmp;
+			switch (dir)
+			{
+				//left
+				case 0:
+					tmp.x = 0;
+					tmp.y = (ushort)rand.Next(height);
+					start = tmp;
+					SetWall(Direction.left, false, start.y, start.x);
+					tmp.x = (ushort)(width - 1);
+					tmp.y = (ushort)rand.Next(height);
+					finish = tmp;
+					SetWall(Direction.right, false, finish.y, finish.x);
+					break;
+				//up
+				case 1:
+					tmp.x = (ushort)rand.Next(width);
+					tmp.y = 0;
+					start = tmp;
+					SetWall(Direction.up, false, start.y, start.x);
+					tmp.x = (ushort)rand.Next(width);
+					tmp.y = (ushort)(height - 1);
+					finish = tmp;
+					SetWall(Direction.down, false, finish.y, finish.x);
+					break;
+				//right
+				case 2:
+					tmp.x = (ushort)(width - 1);
+					tmp.y = (ushort)rand.Next(height);
+					start = tmp;
+					SetWall(Direction.right, false, start.y, start.x);
+					tmp.x = 0;
+					tmp.y = (ushort)rand.Next(height);
+					finish = tmp;
+					SetWall(Direction.left, false, finish.y, finish.x);
+					break;
+				//down
+				case 3:
+					tmp.x = (ushort)rand.Next(width);
+					tmp.y = (ushort)(height - 1);
+					start = tmp;
+					SetWall(Direction.down, false, start.y, start.x);
+					tmp.x = (ushort)rand.Next(width);
+					tmp.y = 0;
+					finish = tmp;
+					SetWall(Direction.up, false, finish.y, finish.x);
+					break;
+			}
 		}
 	}
 }
