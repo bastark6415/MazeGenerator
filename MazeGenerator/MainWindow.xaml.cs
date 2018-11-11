@@ -33,6 +33,12 @@ namespace MazeGenerator
 			bool tmp = true;
 			generator.Generate(false, ref tmp);
 			ImageMaze.Source = generator.ToBitmap();
+			using (var fs = new System.IO.FileStream(@"C:\Users\bastark\Downloads\1.bmp", System.IO.FileMode.Create))
+			{
+				var encoder = new BmpBitmapEncoder();
+				encoder.Frames.Add(BitmapFrame.Create(generator.ToBitmap()));
+				encoder.Save(fs);
+			}
 		}
 	}
 }

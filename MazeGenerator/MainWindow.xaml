@@ -28,11 +28,11 @@
                     DockPanel.Dock="Top">
                 <StackPanel Margin="10">
                     <xctk:IntegerUpDown AllowSpin="True" AllowTextInput="True"
-                                        Increment="1" Minimum="1" Maximum="8192"
+                                        Increment="1" Minimum="1" Maximum="1024"
                                         MinWidth="75"
                                         Watermark="Height" x:Name="UpDownHeight"/>
                     <xctk:IntegerUpDown AllowSpin="True" AllowTextInput="True"
-                                        Increment="1" Minimum="1" Maximum="8192"
+                                        Increment="1" Minimum="1" Maximum="1024"
                                         MinWidth="75" Margin="0, 10"
                                         Watermark="Width" x:Name="UpDownWidth"/>
                     <CheckBox Content="Show steps" IsThreeState="False" IsChecked="False"/>
