@@ -11,7 +11,7 @@ namespace MazeGenerator.Generate
 {
     public abstract class Generator
     {
-		private const ushort maxDimension = 8192;
+		private const ushort maxDimension = 1024;
 		public Cell[,] mapMatrix { get; protected set; }
 		public Point start { get; protected set; }
 		public Point finish { get; protected set; }
@@ -55,7 +55,7 @@ namespace MazeGenerator.Generate
 		}
 		public virtual BitmapSource ToBitmap()
 		{
-			int wall = 1, cell = 10;
+			int wall = 1, cell = 8;
 			int height = this.height * (cell + wall) + wall;
 			int width = this.width * (cell + wall) + wall;
 			PixelFormat pf = PixelFormats.Pbgra32;
