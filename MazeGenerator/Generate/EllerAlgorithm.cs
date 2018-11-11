@@ -13,7 +13,7 @@ namespace MazeGenerator.Generate
 		{
 			Random random = new Random();
 			for (int i = 1; i < height - 1; ++i)
-				for (int j = 1; j < width; ++j)
+				for (int j = 1; j < width - 1; ++j)
 				{
 					bool addwall = random.Next(2) == 1;
 					int dir = random.Next(4);
