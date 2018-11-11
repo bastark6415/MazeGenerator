@@ -38,19 +38,21 @@ namespace MazeGenerator.Generate
 					{
 						int setValue = currRow[j + 1];
 						usedSet[setValue] = false;
-						for (int k = j + 1; k < width && currRow[k] == setValue; ++k)
-							currRow[k] = currRow[j];
+						for (int k = j + 1; k < width; ++k)
+							if (currRow[k] == setValue)
+								currRow[k] = currRow[j];
 					}
 						
 				}
 				//create down walls
 				for (int j = 0; j < width;)
 				{
-					int cntCellsForSet = 1;
+					int cntCellsInSet = 1;
 					int cntCreatedWalls = 0;
-					for (int k = j + 1; k < width && currRow[k] == currRow[j]; ++k)
-						++cntCellsForSet;
-					for (int k = 0; k < cntCellsForSet; ++k)
+					for (int k = j + 1; k < width; ++k)
+						if (currRow[k] == currRow[j])
+							++cntCellsInSet;
+					for (int k = 0; k < cntCellsInSet; ++k)
 					{
 						if (rand.Next(2) == 1)
 						{
@@ -58,12 +60,12 @@ namespace MazeGenerator.Generate
 							++cntCreatedWalls;
 						}
 					}
-					if (cntCreatedWalls == cntCellsForSet)
+					if (cntCreatedWalls == cntCellsInSet)
 					{
-						ushort pos = (ushort)rand.Next(cntCellsForSet);
+						ushort pos = (ushort)rand.Next(cntCellsInSet);
 						SetWall(Direction.down, false, (ushort)i, (ushort)(j + pos));
 					}
-					j += cntCellsForSet;
+					j += cntCellsInSet;
 				}
 				//update used set
 				for (int j = 1; j <= width; ++j)
