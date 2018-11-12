@@ -15,7 +15,7 @@ namespace MazeGenerator.Generate
 			ushort[] currRow = new ushort[width];
 			bool[] usedSet = new bool[width + 1];
 			Random rand = new Random();
-			for (int i = 0; i < height - 1; ++i)
+			for (int i = 0; i < height; ++i)
 			{
 				//assign for each cell unique set if it hasn't
 				for (int j = 0; j < width; ++j)
@@ -28,42 +28,38 @@ namespace MazeGenerator.Generate
 								break;
 							}
 				//create right walls
-				for (int j = 0; j < width - 1; ++j) 
+				for (int j = 0; j < width - 1; ++j)
 				{
 					if (currRow[j] == currRow[j + 1])
 						SetWall(Direction.right, true, (ushort)i, (ushort)j);
-					else if (rand.Next(2) == 1)
+					else if (rand.Next(2) == 1 && i != height - 1)
 						SetWall(Direction.right, true, (ushort)i, (ushort)j);
 					else
 					{
 						int setValue = currRow[j + 1];
 						usedSet[setValue] = false;
-						for (int k = j + 1; k < width && currRow[k] == setValue; ++k)
-							currRow[k] = currRow[j];
+						for (int k = 0; k < width; ++k)
+							if (currRow[k] == setValue)
+								currRow[k] = currRow[j];
 					}
-						
+
 				}
 				//create down walls
-				for (int j = 0; j < width;)
+				for (int l = 1; l <= width; ++l)
 				{
-					int cntCellsForSet = 1;
-					int cntCreatedWalls = 0;
-					for (int k = j + 1; k < width && currRow[k] == currRow[j]; ++k)
-						++cntCellsForSet;
-					for (int k = 0; k < cntCellsForSet; ++k)
-					{
-						if (rand.Next(2) == 1)
-						{
-							SetWall(Direction.down, true, (ushort)i, (ushort)(j + k));
-							++cntCreatedWalls;
-						}
-					}
-					if (cntCreatedWalls == cntCellsForSet)
-					{
-						ushort pos = (ushort)rand.Next(cntCellsForSet);
-						SetWall(Direction.down, false, (ushort)i, (ushort)(j + pos));
-					}
-					j += cntCellsForSet;
+					if (!usedSet[l])
+						continue;
+					int cntCellsInSetWithoutWalls = 0;
+					for (int j = 0; j < width; ++j)
+						if (currRow[j] == l)
+							++cntCellsInSetWithoutWalls;
+					for (int k = 0; k < width && cntCellsInSetWithoutWalls > 1; ++k)
+						if (currRow[k] == l)
+							if (rand.Next(2) == 1)
+							{
+								SetWall(Direction.down, true, (ushort)i, (ushort)k);
+								--cntCellsInSetWithoutWalls;
+							}
 				}
 				//update used set
 				for (int j = 1; j <= width; ++j)
@@ -75,26 +71,6 @@ namespace MazeGenerator.Generate
 					else
 						usedSet[currRow[j]] = true;
 			}
-			//last row
-			//assign for each cell unique set if it hasn't
-			for (int j = 0; j < width; ++j)
-				if (currRow[j] == 0)
-					for (int k = 1; k <= width; ++k)
-						if (!usedSet[k])
-						{
-							usedSet[k] = true;
-							currRow[j] = (ushort)k;
-							break;
-						}
-			//walls
-			for (int j = 0; j < width - 1; ++j)
-				if (currRow[j] != currRow[j + 1])
-				{
-					SetWall(Direction.right, false, (ushort)(height - 1), (ushort)j);
-					int setValue = currRow[j + 1];
-					for (int k = j + 1; k < width && currRow[k] == setValue; ++k)
-						currRow[k] = currRow[j];
-				}
 			//external walls
 			//left right
 			for (int i = 0; i < height; ++i)
@@ -106,7 +82,7 @@ namespace MazeGenerator.Generate
 			for (int j = 0; j < width; ++j)
 			{
 				SetWall(Direction.up, true, 0, (ushort)j);
-				SetWall(Direction.down, true, (ushort)(height - 1) , (ushort)j);
+				SetWall(Direction.down, true, (ushort)(height - 1), (ushort)j);
 			}
 			//random start finish
 			int dir = rand.Next(4);
