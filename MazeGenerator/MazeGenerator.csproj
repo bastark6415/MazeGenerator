@@ -75,6 +75,7 @@
     <Compile Include="Generate\EllerAlgorithm.cs" />
     <Compile Include="Generate\Generator.cs" />
     <Compile Include="Generate\GeneratorDecorator.cs" />
+    <Compile Include="Searcher\ConcreteSearcher.cs" />
     <Compile Include="Searcher\LeeAlgorithm.cs" />
     <Compile Include="Searcher\Searcher.cs" />
     <Compile Include="Types\Cell.cs" />
