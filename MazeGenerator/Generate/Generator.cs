@@ -9,8 +9,8 @@ using System.Windows.Media;
 
 namespace MazeGenerator.Generate
 {
-    public abstract class Generator
-    {
+	public abstract class Generator
+	{
 		private const ushort maxDimension = 1024;
 		protected enum Direction { left, up, right, down}
 		public Cell[,] mapMatrix { get; protected set; }
@@ -21,7 +21,7 @@ namespace MazeGenerator.Generate
 		public Generator(ushort height, ushort width)
 		{
 			if (height > maxDimension || width > maxDimension)
-				throw new ArgumentOutOfRangeException("height or width", 
+				throw new ArgumentOutOfRangeException("height or width",
 					$"Dimentions must not be more than {maxDimension}");
 			this.width = width;
 			this.height = height;
@@ -50,6 +50,15 @@ namespace MazeGenerator.Generate
 			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 1] = c.G;
 			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 2] = c.R;
 			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 3] = c.A;
+		}
+		protected Color GetPixelColor(ref byte[] pixels, int i, int j, int wall, int cell, int y, int x, int stride)
+		{
+			Color c = new Color();
+			c.B = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4];
+			c.G = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 1];
+			c.R = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 2];
+			c.A = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 3];
+			return c;
 		}
 		public virtual BitmapSource ToBitmap(int wallPx, int cellPx)
 		{
