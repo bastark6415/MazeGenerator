@@ -41,6 +41,8 @@ namespace MazeGenerator
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
+			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
+				return;
 			if (generator == null)
 				ButtonGenerate_Click(sender, e);
 			generator = new ModifiedDFS(generator);
