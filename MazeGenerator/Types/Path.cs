@@ -13,8 +13,12 @@ namespace MazeGenerator.Types
 		{
 			path = new List<Point>();
 		}
+		public Path(Path p) : this()
+		{
+			foreach (Point pnt in p.path)
+				AddPoint(pnt);
+		}
 		public void AddPoint(Point p) => path.Add(p);
 		public void Clear() => path.Clear();
-		public void Reverse() => path.Reverse();
     }
 }
