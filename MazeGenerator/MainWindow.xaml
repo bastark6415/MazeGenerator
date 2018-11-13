@@ -71,7 +71,6 @@
                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                    Source="C:\Users\bastark\Downloads\maze.bmp"
                    RenderOptions.BitmapScalingMode="NearestNeighbor"
-                   x:Name="ImageMaze"
                    SnapsToDevicePixels="True"/>
         </ScrollViewer>
     </Grid>
