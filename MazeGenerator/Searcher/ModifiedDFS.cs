@@ -12,27 +12,59 @@ namespace MazeGenerator.Searcher
 {
 	public class ModifiedDFS : Searcher
 	{
-		private bool[,] deadblocksMap;
 		private bool[,] visited;
 		public ModifiedDFS(Generator generator) : base(generator) { }
 		public override void Search(bool showSteps, ref bool canDoNextStep)
 		{
 			throw new NotImplementedException();
 		}
+		private void DFS(Point pnt, Path path)
+		{
+			visited[pnt.y, pnt.x] = true;
+			path.AddPoint(pnt);
+			if (pnt.x == generator.finish.x && pnt.y == generator.finish.y)
+				paths.Add(new Path(path));
+			else
+			{
+				Point nextPoint = pnt;
+				if (!generator.mapMatrix[pnt.y, pnt.x].left	 && pnt.x > 0 && !visited[pnt.y, pnt.x - 1])
+				{
+					--nextPoint.x;
+					DFS(nextPoint, path);
+				}
+				if (!generator.mapMatrix[pnt.y, pnt.x].up	 && pnt.y > 0 && !visited[pnt.y - 1, pnt.x])
+				{
+					--nextPoint.y;
+					DFS(nextPoint, path);
+				}
+				if (!generator.mapMatrix[pnt.y, pnt.x].right && pnt.x < generator.width - 1 && !visited[pnt.y, pnt.x + 1])
+				{
+					++nextPoint.x;
+					DFS(nextPoint, path);
+				}
+				if (!generator.mapMatrix[pnt.y, pnt.x].down  && pnt.y < generator.height - 1 && !visited[pnt.y + 1, pnt.x])
+				{
+					++nextPoint.y;
+					DFS(nextPoint, path);
+				}
+			}
+			visited[pnt.y, pnt.x] = false;
+			path.PopPoint();
+		}
 		private void SetBlankAsDeadBlock(ushort y, ushort x)
 		{
-			if (y >= deadblocksMap.GetLength(0) || x >= deadblocksMap.GetLength(1))
+			if (y >= visited.GetLength(0) || x >= visited.GetLength(1))
 				return;
-			if (deadblocksMap[y, x])
+			if (visited[y, x])
 				return;
 			int k = 0;
-			if (generator.mapMatrix[y, x].left	|| (x > 0					 && deadblocksMap[y, x - 1])) ++k;
-			if (generator.mapMatrix[y, x].up	|| (y > 0					 && deadblocksMap[y - 1, x])) ++k;
-			if (generator.mapMatrix[y, x].right || (x < generator.width - 1	 && deadblocksMap[y, x + 1])) ++k;
-			if (generator.mapMatrix[y, x].down	|| (y < generator.height - 1 && deadblocksMap[y + 1, x])) ++k;
+			if (generator.mapMatrix[y, x].left	|| (x > 0					 && visited[y, x - 1])) ++k;
+			if (generator.mapMatrix[y, x].up	|| (y > 0					 && visited[y - 1, x])) ++k;
+			if (generator.mapMatrix[y, x].right || (x < generator.width - 1	 && visited[y, x + 1])) ++k;
+			if (generator.mapMatrix[y, x].down	|| (y < generator.height - 1 && visited[y + 1, x])) ++k;
 			if (k >= 3)
 			{
-				deadblocksMap[y, x] = true;
+				visited[y, x] = true;
 				if (!generator.mapMatrix[y, x].left)	SetBlankAsDeadBlock(y, (ushort)(x - 1));
 				if (!generator.mapMatrix[y, x].up)		SetBlankAsDeadBlock((ushort)(y - 1), x);
 				if (!generator.mapMatrix[y, x].right)	SetBlankAsDeadBlock(y, (ushort)(x + 1));
@@ -41,8 +73,8 @@ namespace MazeGenerator.Searcher
 		}
 		private void SetDeadBlocks()
 		{
-			for (int i = 0; i < deadblocksMap.GetLength(0); ++i)
-				for (int j = 0; j < deadblocksMap.GetLength(1); ++j)
+			for (int i = 0; i < visited.GetLength(0); ++i)
+				for (int j = 0; j < visited.GetLength(1); ++j)
 					SetBlankAsDeadBlock((ushort)i, (ushort)j);
 		}
 	}
