@@ -71,6 +71,30 @@ namespace MazeGenerator.Generate
 					else
 						usedSet[currRow[j]] = true;
 			}
+			//Rand
+			int cntWalls = height * width < 100 ? 1 : (int)Math.Round(height * width * 0.01);
+			for (int i = 0; i < cntWalls; ++i)
+			{
+				Point p;
+				p.x = (ushort)rand.Next(1, width - 1);
+				p.y = (ushort)rand.Next(1, height - 1);
+				int direction = rand.Next(4);
+				switch (direction)
+				{
+					case 0:
+						SetWall(Direction.left, false, p.y, p.x);
+						break;
+					case 1:
+						SetWall(Direction.up, false, p.y, p.x);
+						break;
+					case 2:
+						SetWall(Direction.right, false, p.y, p.x);
+						break;
+					case 3:
+						SetWall(Direction.down, false, p.y, p.x);
+						break;
+				}
+			}
 			//external walls
 			//left right
 			for (int i = 0; i < height; ++i)

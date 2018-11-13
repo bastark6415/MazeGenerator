@@ -29,24 +29,27 @@ namespace MazeGenerator.Searchers
 				paths.Add(new Path(path));
 			else
 			{
-				Point nextPoint = pnt;
 				if (!generator.mapMatrix[pnt.y, pnt.x].left	 && pnt.x > 0 && !visited[pnt.y, pnt.x - 1])
 				{
+					Point nextPoint = pnt;
 					--nextPoint.x;
 					DFS(showSteps, ref canDoNextStep, nextPoint, path);
 				}
 				if (!generator.mapMatrix[pnt.y, pnt.x].up	 && pnt.y > 0 && !visited[pnt.y - 1, pnt.x])
 				{
+					Point nextPoint = pnt;
 					--nextPoint.y;
 					DFS(showSteps, ref canDoNextStep, nextPoint, path);
 				}
 				if (!generator.mapMatrix[pnt.y, pnt.x].right && pnt.x < generator.width - 1 && !visited[pnt.y, pnt.x + 1])
 				{
+					Point nextPoint = pnt;
 					++nextPoint.x;
 					DFS(showSteps, ref canDoNextStep, nextPoint, path);
 				}
 				if (!generator.mapMatrix[pnt.y, pnt.x].down  && pnt.y < generator.height - 1 && !visited[pnt.y + 1, pnt.x])
 				{
+					Point nextPoint = pnt;
 					++nextPoint.y;
 					DFS(showSteps, ref canDoNextStep, nextPoint, path);
 				}
