@@ -11,7 +11,7 @@ namespace MazeGenerator.Generate
 {
 	public abstract class Generator
 	{
-		private const ushort maxDimension = 1024;
+		private const ushort maxDimension = 512;
 		protected enum Direction { left, up, right, down}
 		public Cell[,] mapMatrix { get; protected set; }
 		public Point start { get; protected set; }
