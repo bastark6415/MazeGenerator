@@ -25,20 +25,5 @@ namespace MazeGenerator
 		{
 			InitializeComponent();
 		}
-
-		private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
-		{
-			MazeGenerator.Generate.Generator generator = new MazeGenerator.Generate.EllerAlgorithm(
-				(ushort)UpDownHeight.Value, (ushort)UpDownWidth.Value);
-			bool tmp = true;
-			generator.Generate(false, ref tmp);
-			ImageMaze.Source = generator.ToBitmap();
-			using (var fs = new System.IO.FileStream(@"C:\Users\bastark\Downloads\1.bmp", System.IO.FileMode.Create))
-			{
-				var encoder = new BmpBitmapEncoder();
-				encoder.Frames.Add(BitmapFrame.Create(generator.ToBitmap()));
-				encoder.Save(fs);
-			}
-		}
 	}
 }
