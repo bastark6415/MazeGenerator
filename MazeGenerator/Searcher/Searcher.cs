@@ -21,11 +21,11 @@ namespace MazeGenerator.Searcher
 			base.Action(showSteps, ref canDoNextStep);
 		}
 		public abstract void Search(bool showSteps, ref bool canDoNextStep);
-		public override BitmapSource ToBitmap()
+		public override BitmapSource ToBitmap(int wallPx, int cellPx)
 		{
-			return base.ToBitmap();
+			throw new NotImplementedException();
 		}
-		public virtual BitmapSource ToBitmap(int[] paths)
+		public virtual BitmapSource ToBitmap(int wallPx, int cellPx, int[] paths)
 		{
 			throw new NotImplementedException();
 		}
