@@ -7,9 +7,9 @@ using MazeGenerator.Generate;
 
 namespace MazeGenerator.Searcher
 {
-	public class ConcreteSearcher : Searcher
+	public class ModifiedDFS : Searcher
 	{
-		public ConcreteSearcher(Generator generator) : base(generator) { }
+		public ModifiedDFS(Generator generator) : base(generator) { }
 		public override void Search(bool showSteps, ref bool canDoNextStep)
 		{
 			throw new NotImplementedException();
