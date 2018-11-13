@@ -8,7 +8,7 @@ using MazeGenerator.Generate;
 using MazeGenerator.Types;
 using System.Windows.Media;
 
-namespace MazeGenerator.Searcher
+namespace MazeGenerator.Searchers
 {
     public abstract class Searcher : GeneratorDecorator
     {
@@ -58,7 +58,7 @@ namespace MazeGenerator.Searcher
 			}
 			return BitmapSource.Create(width, height, 96, 96, pf, null, pixels, stride);
 		}
-		public virtual BitmapSource ToBitmap(int wallPx, int cellPx, int[] paths)
+		public virtual BitmapSource ToBitmap(int wallPx, int cellPx, bool[] paths)
 		{
 			throw new NotImplementedException();
 		}

@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
+using MazeGenerator.Generate;
+using MazeGenerator.Searchers;
 
 namespace MazeGenerator
 {
@@ -21,9 +23,45 @@ namespace MazeGenerator
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private Generator generator;
+		private bool canDoNextStep = true;
+		private const int wallPx = 1;
+		private const int cellPx = 8;
 		public MainWindow()
 		{
 			InitializeComponent();
+		}
+		private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
+		{
+			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
+				return;
+			generator = new EllerAlgorithm((ushort)UpDownHeight.Value, (ushort)UpDownWidth.Value);
+			generator.Generate(CheckBoxSteps.IsChecked ?? false, ref canDoNextStep);
+			PrintMaze(sender, e);
+		}
+		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
+		{
+			if (generator == null)
+				ButtonGenerate_Click(sender, e);
+			generator = new ModifiedDFS(generator);
+			Searcher searcher = generator as Searcher;
+			searcher.Search(CheckBoxSteps.IsChecked ?? false, ref canDoNextStep);
+			PrintMaze(sender, e);
+		}	
+		private void PrintMaze(object sender, RoutedEventArgs e)
+		{
+			if (generator == null)
+				return;
+			ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
+		}
+		private void PrintMaze(object sender, RoutedEventArgs e, bool[] paths)
+		{
+			if (generator == null)
+				return;
+			 Searcher searcher = generator as Searcher;
+			if (searcher == null)
+				return;
+			ImageMaze.Source = searcher.ToBitmap(wallPx, cellPx);
 		}
 	}
 }

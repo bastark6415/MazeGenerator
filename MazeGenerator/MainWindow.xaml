@@ -27,7 +27,7 @@
                         Background="GhostWhite" BorderBrush="LightGray"
                         DockPanel.Dock="Top">
                     <DockPanel>
-                        <Slider x:Name="SliderZoom" Margin="5" Minimum="0.1" Maximum="15" TickFrequency="0.4"/>
+                        <Slider x:Name="SliderZoom" Margin="5" Minimum="0.4" Maximum="16" TickFrequency="0.4"/>
                     </DockPanel>
                 </Border>
                 <Border Margin="5, 5, 5, 5" BorderThickness="1" Background="GhostWhite" BorderBrush="LightGray">
@@ -46,13 +46,14 @@
                                             MaxLength="5"
                                             DockPanel.Dock="Top"/>
                         <CheckBox Content="Show steps" IsThreeState="False" IsChecked="False"
-                                  DockPanel.Dock="Top"/>
+                                  DockPanel.Dock="Top" x:Name="CheckBoxSteps"/>
                         <Button x:Name="ButtonGenerate" Content="Generate" HorizontalAlignment="Stretch"
-                                Margin="0, 5, 0, 0"
+                                Margin="0, 5, 0, 0" Click="ButtonGenerate_Click"
                                 DockPanel.Dock="Top"/>
                         <!--Search paths-->
                         <Button x:Name="ButtonSearch" Content="Search" HorizontalAlignment="Stretch"
-                                Margin="0, 5, 0, 5" DockPanel.Dock="Top"/>
+                                Margin="0, 5, 0, 5" DockPanel.Dock="Top"
+                                Click="ButtonSearch_Click"/>
                         <ListBox x:Name="ListBoxPathes">
                             <ListBoxItem  Margin="5">
                                 <CheckBox Content="Path #1"/>

@@ -8,7 +8,7 @@ using MazeGenerator.Generate;
 using System.Windows.Media;
 using MazeGenerator.Types;
 
-namespace MazeGenerator.Searcher
+namespace MazeGenerator.Searchers
 {
 	public class ModifiedDFS : Searcher
 	{
