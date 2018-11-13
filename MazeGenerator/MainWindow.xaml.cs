@@ -45,7 +45,8 @@ namespace MazeGenerator
 				return;
 			if (generator == null)
 				ButtonGenerate_Click(sender, e);
-			generator = new ModifiedDFS(generator);
+			if (!(generator is Searcher))
+				generator = new ModifiedDFS(generator);
 			Searcher searcher = generator as Searcher;
 			searcher.Search(CheckBoxSteps.IsChecked ?? false, ref canDoNextStep);
 			PrintMaze(sender, e);
