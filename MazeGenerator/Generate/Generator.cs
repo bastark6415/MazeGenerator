@@ -53,6 +53,8 @@ namespace MazeGenerator.Generate
 		}
 		public virtual BitmapSource ToBitmap(int wallPx, int cellPx)
 		{
+			if (wallPx <= 0 || cellPx <= 0)
+				throw new ArgumentOutOfRangeException("wallPx or cellPx", "sizes of wall and cell must be more than 0");
 			int height = this.height * (cellPx + wallPx) + wallPx;
 			int width = this.width * (cellPx + wallPx) + wallPx;
 			PixelFormat pf = PixelFormats.Pbgra32;
