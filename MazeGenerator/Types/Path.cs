@@ -19,6 +19,7 @@ namespace MazeGenerator.Types
 				AddPoint(pnt);
 		}
 		public void AddPoint(Point p) => path.Add(p);
+		public bool RemovePoint(Point p) => path.Remove(p);
 		public void Clear() => path.Clear();
     }
 }
