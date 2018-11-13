@@ -39,7 +39,7 @@ namespace MazeGenerator.Searchers
 				colors[i].B = (byte)rand.Next(255);
 				colors[i].G = (byte)rand.Next(255);
 				colors[i].R = (byte)rand.Next(255);
-				colors[i].A = 30;
+				colors[i].A = 80;
 			}
 			foreach (Path path in paths)
 			{
@@ -50,7 +50,7 @@ namespace MazeGenerator.Searchers
 						for (int l = wallPx; l < wallPx + cellPx; ++l)
 						{
 							Color prev = GetPixelColor(ref pixels, p.y, p.x, wallPx, cellPx, k, l, stride);
-							prev = Color.Add(prev, colors[paths.IndexOf(path)]);
+							prev = Color.Add(prev, Color.Multiply(Color.Subtract(colors[paths.IndexOf(path)], prev), colors[paths.IndexOf(path)].ScA));
 							SetPixelColor(ref pixels, prev, p.y, p.x, wallPx, cellPx, k, l, stride);
 						}
 					}
