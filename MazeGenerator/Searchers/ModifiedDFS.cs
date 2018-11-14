@@ -56,7 +56,7 @@ namespace MazeGenerator.Searchers
 				}
 			}
 			visited[pnt.y, pnt.x] = false;
-			path.RemovePoint();
+			path.RemovePoint(pnt);
 		}
 		private void SetBlankAsDeadBlock(ushort y, ushort x)
 		{
