@@ -10,8 +10,6 @@
     <DockPanel>
         <Menu VerticalAlignment="Top" Height="Auto" DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Load" x:Name="MenuItemLoad" Click="MenuItemLoad_Click"/>
-                <MenuItem Header="Save" x:Name="MenuItemSave" Click="MenuItemSave_Click"/>
                 <MenuItem Header="Export to">
                     <MenuItem Header="Bitmap" x:Name="MenuItemBitmap" Click="MenuItemBitmap_Click"/>
                 </MenuItem>

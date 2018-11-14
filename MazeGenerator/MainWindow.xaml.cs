@@ -17,6 +17,7 @@ using MazeGenerator.Generate;
 using MazeGenerator.Searchers;
 using System.IO;
 using Microsoft.Win32;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MazeGenerator
 {
@@ -81,17 +82,6 @@ namespace MazeGenerator
 				paths[i] = (bool)((items[i] as ListBoxItem).Content as CheckBox).IsChecked;
 			ImageMaze.Source = (generator as Searcher).ToBitmap(wallPx, cellPx, paths);
 		}
-
-		private void MenuItemSave_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void MenuItemLoad_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
 		private void MenuItemBitmap_Click(object sender, RoutedEventArgs e)
 		{
 			SaveFileDialog dialog = new SaveFileDialog();
