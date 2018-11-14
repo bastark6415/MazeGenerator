@@ -50,6 +50,19 @@ namespace MazeGenerator
 			Searcher searcher = generator as Searcher;
 			searcher.Search(CheckBoxSteps.IsChecked ?? false, ref canDoNextStep);
 			PrintMaze(sender, e);
+			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
+			for (int i = 0; i < items.Length; ++i)
+			{
+				ListBoxItem tmp = new ListBoxItem();
+				CheckBox check = new CheckBox();
+				tmp.Margin = new Thickness(2, 2, 2, 0);
+				check.Content = $"Path {i + 1}";
+				check.IsChecked = true;
+				check.Click += ListBoxPathsChange;
+				tmp.Content = check;
+				items[i] = tmp;
+			}
+			ListBoxPaths.ItemsSource = items;
 		}	
 		private void PrintMaze(object sender, RoutedEventArgs e)
 		{
@@ -57,14 +70,13 @@ namespace MazeGenerator
 				return;
 			ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
 		}
-		private void PrintMaze(object sender, RoutedEventArgs e, bool[] paths)
+		private void ListBoxPathsChange(object sender, RoutedEventArgs e)
 		{
-			if (generator == null)
-				return;
-			 Searcher searcher = generator as Searcher;
-			if (searcher == null)
-				return;
-			ImageMaze.Source = searcher.ToBitmap(wallPx, cellPx);
+			ItemCollection items = ListBoxPaths.Items;
+			bool[] paths = new bool[items.Count];
+			for (int i = 0; i < paths.Length; ++i)
+				paths[i] = (bool)((items[i] as ListBoxItem).Content as CheckBox).IsChecked;
+			ImageMaze.Source = (generator as Searcher).ToBitmap(wallPx, cellPx, paths);
 		}
 	}
 }

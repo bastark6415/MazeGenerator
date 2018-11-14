@@ -54,23 +54,7 @@
                         <Button x:Name="ButtonSearch" Content="Search" HorizontalAlignment="Stretch"
                                 Margin="0, 5, 0, 5" DockPanel.Dock="Top"
                                 Click="ButtonSearch_Click"/>
-                        <ListBox x:Name="ListBoxPathes">
-                            <ListBoxItem  Margin="5">
-                                <CheckBox Content="Path #1"/>
-                            </ListBoxItem>
-                            <ListBoxItem  Margin="5">
-                                <CheckBox Content="Path #2"/>
-                            </ListBoxItem>
-                            <ListBoxItem  Margin="5">
-                                <CheckBox Content="Path #3"/>
-                            </ListBoxItem>
-                            <ListBoxItem  Margin="5">
-                                <CheckBox Content="Path ..."/>
-                            </ListBoxItem>
-                            <ListBoxItem  Margin="5">
-                                <CheckBox Content="Path #n"/>
-                            </ListBoxItem>
-                        </ListBox>
+                        <ListBox x:Name="ListBoxPaths"/>
                     </DockPanel>
                 </Border>
             </DockPanel>

@@ -16,6 +16,7 @@ namespace MazeGenerator.Searchers
 		public ModifiedDFS(Generator generator) : base(generator) { }
 		public override void Search(bool showSteps, ref bool canDoNextStep)
 		{
+			paths.Clear();
 			visited = new bool[generator.height, generator.width];
 			SetDeadBlocks();
 			Path startPath = new Path();
