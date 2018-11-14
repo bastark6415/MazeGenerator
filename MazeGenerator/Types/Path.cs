@@ -8,18 +8,18 @@ namespace MazeGenerator.Types
 {
     public class Path
     {
-		public List<Point> path { get; private set; }
+		public Stack<Point> path { get; private set; }
 		public Path()
 		{
-			path = new List<Point>();
+			path = new Stack<Point>();
 		}
 		public Path(Path p) : this()
 		{
 			foreach (Point pnt in p.path)
 				AddPoint(pnt);
 		}
-		public void AddPoint(Point p) => path.Add(p);
-		public bool RemovePoint(Point p) => path.Remove(p);
+		public void AddPoint(Point p) => path.Push(p);
+		public Point RemovePoint() => path.Pop();
 		public void Clear() => path.Clear();
     }
 }

@@ -38,6 +38,7 @@ namespace MazeGenerator
 			generator = new EllerAlgorithm((ushort)UpDownHeight.Value, (ushort)UpDownWidth.Value);
 			generator.Generate(CheckBoxSteps.IsChecked ?? false, ref canDoNextStep);
 			PrintMaze(sender, e);
+			ListBoxPaths.ItemsSource = null;
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
