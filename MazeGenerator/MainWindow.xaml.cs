@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using MazeGenerator.Generate;
 using MazeGenerator.Searchers;
+using System.IO;
+using Microsoft.Win32;
 
 namespace MazeGenerator
 {
@@ -78,6 +80,32 @@ namespace MazeGenerator
 			for (int i = 0; i < paths.Length; ++i)
 				paths[i] = (bool)((items[i] as ListBoxItem).Content as CheckBox).IsChecked;
 			ImageMaze.Source = (generator as Searcher).ToBitmap(wallPx, cellPx, paths);
+		}
+
+		private void MenuItemSave_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void MenuItemLoad_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void MenuItemBitmap_Click(object sender, RoutedEventArgs e)
+		{
+			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.AddExtension = true;
+			dialog.DefaultExt = ".bmp";
+			dialog.Filter = "Bitmap image (*.bmp)|*.bmp";
+			dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			if (dialog.ShowDialog() == true)
+			{
+				BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+				encoder.Frames.Add(BitmapFrame.Create(ImageMaze.Source as BitmapSource));
+				using (FileStream stream = new FileStream(dialog.FileName, FileMode.Create))
+					encoder.Save(stream);
+			}
 		}
 	}
 }

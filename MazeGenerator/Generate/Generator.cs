@@ -27,23 +27,11 @@ namespace MazeGenerator.Generate
 			this.height = height;
 			mapMatrix = new Cell[height, width];
 		}
-		public static Generator Parse(string s)
-		{
-			throw new NotImplementedException();
-		}
-		public static bool TryParse(string s, out Generator result)
-		{
-			throw new NotImplementedException();
-		}
 		public virtual void Action(bool showSteps, ref bool canDoNextStep)
 		{
 			Generate(showSteps, ref canDoNextStep);
 		}
 		public abstract void Generate(bool showSteps, ref bool canDoNextStep);
-		public override string ToString()
-		{
-			throw new NotImplementedException();
-		}
 		protected void SetPixelColor(ref byte[]pixels, Color c, int i, int j, int wall, int cell, int y, int x, int stride)
 		{
 			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4] = c.B;
