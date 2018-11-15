@@ -25,8 +25,7 @@
                         Background="GhostWhite" BorderBrush="LightGray"
                         DockPanel.Dock="Top">
                     <DockPanel>
-                        <Slider x:Name="SliderZoom" Margin="5" Minimum="1" Maximum="4" TickFrequency="1"
-                                Value="1" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
+                        <Slider x:Name="SliderZoom" Margin="5" Minimum="0.4" Maximum="16" TickFrequency="0.4"/>
                     </DockPanel>
                 </Border>
                 <Border Margin="5, 5, 5, 5" BorderThickness="1" Background="GhostWhite" BorderBrush="LightGray">
