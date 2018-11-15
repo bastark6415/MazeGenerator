@@ -45,6 +45,8 @@ namespace MazeGenerator
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
+			System.Windows.MessageBox.Show(SliderZoom.Value.ToString());
+			return;
 			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
 				return;
 			if (generator == null)
