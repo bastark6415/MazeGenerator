@@ -14,15 +14,15 @@ namespace MazeGenerator.Searchers
 	{
 		private bool[,] visited;
 		public ModifiedDFS(Generator generator) : base(generator) { }
-		public override void Search(bool showSteps, ref bool canDoNextStep)
+		public override void Search(ref bool? canDoNextStep)
 		{
 			paths.Clear();
 			visited = new bool[generator.height, generator.width];
 			SetDeadBlocks();
 			Path startPath = new Path();
-			DFS(showSteps, ref canDoNextStep, generator.start, startPath);
+			DFS(ref canDoNextStep, generator.start, startPath);
 		}
-		private void DFS(bool showSteps, ref bool canDoNextStep, Point pnt, Path path)
+		private void DFS(ref bool? canDoNextStep, Point pnt, Path path)
 		{
 			visited[pnt.y, pnt.x] = true;
 			path.AddPoint(pnt);
@@ -34,25 +34,25 @@ namespace MazeGenerator.Searchers
 				{
 					Point nextPoint = pnt;
 					--nextPoint.x;
-					DFS(showSteps, ref canDoNextStep, nextPoint, path);
+					DFS(ref canDoNextStep, nextPoint, path);
 				}
 				if (!generator.mapMatrix[pnt.y, pnt.x].up	 && pnt.y > 0 && !visited[pnt.y - 1, pnt.x])
 				{
 					Point nextPoint = pnt;
 					--nextPoint.y;
-					DFS(showSteps, ref canDoNextStep, nextPoint, path);
+					DFS(ref canDoNextStep, nextPoint, path);
 				}
 				if (!generator.mapMatrix[pnt.y, pnt.x].right && pnt.x < generator.width - 1 && !visited[pnt.y, pnt.x + 1])
 				{
 					Point nextPoint = pnt;
 					++nextPoint.x;
-					DFS(showSteps, ref canDoNextStep, nextPoint, path);
+					DFS(ref canDoNextStep, nextPoint, path);
 				}
 				if (!generator.mapMatrix[pnt.y, pnt.x].down  && pnt.y < generator.height - 1 && !visited[pnt.y + 1, pnt.x])
 				{
 					Point nextPoint = pnt;
 					++nextPoint.y;
-					DFS(showSteps, ref canDoNextStep, nextPoint, path);
+					DFS(ref canDoNextStep, nextPoint, path);
 				}
 			}
 			visited[pnt.y, pnt.x] = false;

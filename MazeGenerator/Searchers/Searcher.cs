@@ -17,12 +17,12 @@ namespace MazeGenerator.Searchers
 		{
 			paths = new List<Path>();
 		}
-		public override void Action(bool showSteps, ref bool canDoNextStep)
+		public override void Action(ref bool? canDoNextStep)
 		{
-			base.Action(showSteps, ref canDoNextStep);
-			Search(showSteps, ref canDoNextStep);
+			base.Action(ref canDoNextStep);
+			Search(ref canDoNextStep);
 		}
-		public abstract void Search(bool showSteps, ref bool canDoNextStep);
+		public abstract void Search(ref bool? canDoNextStep);
 		public override BitmapSource ToBitmap(int wallPx, int cellPx)
 		{
 			bool[] allPaths = new bool[paths.Count];

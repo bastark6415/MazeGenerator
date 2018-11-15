@@ -27,7 +27,7 @@ namespace MazeGenerator
 	public partial class MainWindow : Window
 	{
 		private Generator generator;
-		private bool canDoNextStep = true;
+		private bool? canDoNextStep = true;
 		private const int wallPx = 1;
 		private const int cellPx = 8;
 		public MainWindow()
@@ -39,7 +39,7 @@ namespace MazeGenerator
 			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
 				return;
 			generator = new EllerAlgorithm((ushort)UpDownHeight.Value, (ushort)UpDownWidth.Value);
-			generator.Generate(CheckBoxSteps.IsChecked ?? false, ref canDoNextStep);
+			generator.Generate(ref canDoNextStep);
 			PrintMaze(sender, e);
 			ListBoxPaths.ItemsSource = null;
 		}
@@ -52,7 +52,7 @@ namespace MazeGenerator
 			if (!(generator is Searcher))
 				generator = new ModifiedDFS(generator);
 			Searcher searcher = generator as Searcher;
-			searcher.Search(CheckBoxSteps.IsChecked ?? false, ref canDoNextStep);
+			searcher.Search(ref canDoNextStep);
 			PrintMaze(sender, e);
 			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
 			for (int i = 0; i < items.Length; ++i)

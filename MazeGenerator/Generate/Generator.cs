@@ -27,11 +27,11 @@ namespace MazeGenerator.Generate
 			this.height = height;
 			mapMatrix = new Cell[height, width];
 		}
-		public virtual void Action(bool showSteps, ref bool canDoNextStep)
+		public virtual void Action(ref bool? canDoNextStep)
 		{
-			Generate(showSteps, ref canDoNextStep);
+			Generate(ref canDoNextStep);
 		}
-		public abstract void Generate(bool showSteps, ref bool canDoNextStep);
+		public abstract void Generate(ref bool? canDoNextStep);
 		protected void SetPixelColor(ref byte[]pixels, Color c, int i, int j, int wall, int cell, int y, int x, int stride)
 		{
 			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4] = c.B;
