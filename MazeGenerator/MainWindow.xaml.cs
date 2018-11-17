@@ -58,9 +58,10 @@ namespace MazeGenerator
 		}
 		private void OnNextStep(string msg)
 		{
-			System.Windows.MessageBox.Show(msg);
+			//System.Windows.MessageBox.Show(msg);
 			//To Status Bar
-			ImageMaze.Source = generator.ToBitmap(1, 8);
+			if ((bool)CheckBoxSteps.IsChecked || msg == "Search has ended" || msg == "Generated")
+				ImageMaze.Source = generator.ToBitmap(1, 8);
 		}
 		//private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		//{
@@ -93,13 +94,15 @@ namespace MazeGenerator
 				generator = new ModifiedBFS(generator);
 			Searcher searcher = generator as Searcher;
 			CancellationTokenSource cancelSource = new CancellationTokenSource();
-			Progress<string> progress = new Progress<string>(s => { OnNextStep(s); UpdatePathsList(); });
+			Progress<string> progress = new Progress<string>(s => { OnNextStep(s); UpdatePathsList(s); });
 			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
 			searcher.Search(cancelSource.Token, progress, signal);
-			UpdatePathsList();
+			UpdatePathsList("Search has ended");
 		}
-		private void UpdatePathsList()
+		private void UpdatePathsList(string s)
 		{
+			if (!(bool)CheckBoxSteps.IsChecked && s != "Search has ended")
+				return;
 			Searcher searcher = generator as Searcher;
 			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
 			for (int i = 0; i < items.Length; ++i)
