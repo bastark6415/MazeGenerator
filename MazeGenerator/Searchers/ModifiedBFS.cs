@@ -84,16 +84,12 @@ namespace MazeGenerator.Searchers
 						allPossiblePaths.Enqueue(p);
 					}
 					//Progress
-					List<Path> tmpPaths = new List<Path>(paths);
-					paths.Clear();
-					foreach (Path p in allPossiblePaths)
-						paths.Add(p);
+					List<Path> tmpPaths = paths;
+					paths = allPossiblePaths.ToList();
 					progress?.Report($"Searching...");
-					paths.Clear();
-					foreach (Path p in tmpPaths)
-						paths.Add(p);
 					signal?.Reset();
 					signal?.WaitOne();
+					paths = tmpPaths;
 				}
 			}
 			//Progress

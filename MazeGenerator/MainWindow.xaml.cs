@@ -147,8 +147,7 @@ namespace MazeGenerator
 
 		private void MenuItem_Click(object sender, RoutedEventArgs e)
 		{
-			if (signal != null && signal.SafeWaitHandle != null)
-				signal.Set();				
+			signal.Set();
 		}
 	}
 }

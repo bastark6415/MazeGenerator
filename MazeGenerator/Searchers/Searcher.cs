@@ -43,15 +43,12 @@ namespace MazeGenerator.Searchers
 			int stride = (width * pf.BitsPerPixel + 7) / 8;
 			byte[] pixels = new byte[height * stride];
 			source.CopyPixels(pixels, stride, 0);
-			Color[] colors = new Color[pathsForShow.Length];
-			Random rand = new Random();
+			Color[] colors = new Color[] {Colors.Blue, Colors.Coral, Colors.Cyan,
+				Colors.Green, Colors.Red, Colors.Violet, Colors.Yellow, Colors.Orange, Colors.Pink,
+				Colors.OrangeRed, Colors.Salmon, Colors.Tomato, Colors.Silver, Colors.PeachPuff,
+				Colors.Navy };
 			for (int i = 0; i < colors.Length; ++i)
-			{
-				colors[i].B = (byte)rand.Next(255);
-				colors[i].G = (byte)rand.Next(255);
-				colors[i].R = (byte)rand.Next(255);
-				colors[i].A = 120;
-			}
+				colors[i].A = 180;
 			for (int i = 0; i < pathsForShow.Length; ++i)
 			{
 				if (!pathsForShow[i])
@@ -63,7 +60,7 @@ namespace MazeGenerator.Searchers
 						for (int l = wallPx; l < wallPx + cellPx; ++l)
 						{
 							Color prev = GetPixelColor(ref pixels, p.y, p.x, wallPx, cellPx, k, l, stride);
-							prev = Color.Add(prev, Color.Multiply(Color.Subtract(colors[i], prev), colors[i].ScA));
+							prev = Color.Add(prev, Color.Multiply(Color.Subtract(colors[i % colors.Length], prev), colors[i % colors.Length].ScA));
 							SetPixelColor(ref pixels, prev, p.y, p.x, wallPx, cellPx, k, l, stride);
 						}
 					}
