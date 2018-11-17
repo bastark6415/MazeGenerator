@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MazeGenerator.Types;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Threading;
 
 namespace MazeGenerator.Generate
 {
@@ -32,6 +33,9 @@ namespace MazeGenerator.Generate
 			Generate(ref canDoNextStep);
 		}
 		public abstract void Generate(ref bool? canDoNextStep);
+		public virtual Task Generate(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
+			Task.Run(() => GenerateAsync(progress, signal), token);
+		protected abstract void GenerateAsync(IProgress<string> progress, ManualResetEvent signal);
 		protected void SetPixelColor(ref byte[]pixels, Color c, int i, int j, int wall, int cell, int y, int x, int stride)
 		{
 			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4] = c.B;

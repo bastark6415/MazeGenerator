@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using MazeGenerator.Types;
@@ -18,6 +19,14 @@ namespace MazeGenerator.Generate
 		public override void Action(ref bool? canDoNextStep) => generator.Action(ref canDoNextStep);
 		public override BitmapSource ToBitmap(int wallPx, int cellPx) => generator.ToBitmap(wallPx, cellPx);
 		sealed public override void Generate(ref bool? canDoNextStep)
+		{
+			throw new NotImplementedException();
+		}
+		sealed protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
+		{
+			throw new NotImplementedException();
+		}
+		sealed public override Task Generate(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
 			throw new NotImplementedException();
 		}

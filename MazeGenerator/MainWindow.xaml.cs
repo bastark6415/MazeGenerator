@@ -18,6 +18,7 @@ using MazeGenerator.Searchers;
 using System.IO;
 using Microsoft.Win32;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 
 namespace MazeGenerator
 {
@@ -34,14 +35,31 @@ namespace MazeGenerator
 		{
 			InitializeComponent();
 		}
+		//private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
+		//{
+		//	if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
+		//		return;
+		//	generator = new EllerAlgorithm((ushort)UpDownHeight.Value, (ushort)UpDownWidth.Value);
+		//	generator.Generate(ref canDoNextStep);
+		//	PrintMaze(sender, e);
+		//	ListBoxPaths.ItemsSource = null;
+		//}
+		ManualResetEvent signal = new ManualResetEvent(false);
 		private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
 				return;
 			generator = new EllerAlgorithm((ushort)UpDownHeight.Value, (ushort)UpDownWidth.Value);
-			generator.Generate(ref canDoNextStep);
-			PrintMaze(sender, e);
+			CancellationTokenSource cancelSource = new CancellationTokenSource();
+			Progress<string> progress = new Progress<string>(s => OnNextStep(s));
 			ListBoxPaths.ItemsSource = null;
+			generator.Generate(cancelSource.Token, progress, signal);
+		}
+		private void OnNextStep(string msg)
+		{
+			//System.Windows.MessageBox.Show(msg);
+			//To Status Bar
+			ImageMaze.Source = generator.ToBitmap(1, 6);
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
@@ -96,6 +114,11 @@ namespace MazeGenerator
 				using (FileStream stream = new FileStream(dialog.FileName, FileMode.Create))
 					encoder.Save(stream);
 			}
+		}
+
+		private void MenuItem_Click(object sender, RoutedEventArgs e)
+		{
+			signal?.Set();
 		}
 	}
 }
