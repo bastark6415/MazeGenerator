@@ -44,7 +44,7 @@ namespace MazeGenerator
 		//	PrintMaze(sender, e);
 		//	ListBoxPaths.ItemsSource = null;
 		//}
-		ManualResetEvent signal = new ManualResetEvent(false);
+		ManualResetEvent signal;
 		private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
 		{
 			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
@@ -53,25 +53,54 @@ namespace MazeGenerator
 			CancellationTokenSource cancelSource = new CancellationTokenSource();
 			Progress<string> progress = new Progress<string>(s => OnNextStep(s));
 			ListBoxPaths.ItemsSource = null;
+			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
 			generator.Generate(cancelSource.Token, progress, signal);
 		}
 		private void OnNextStep(string msg)
 		{
-			//System.Windows.MessageBox.Show(msg);
+			System.Windows.MessageBox.Show(msg);
 			//To Status Bar
-			ImageMaze.Source = generator.ToBitmap(1, 6);
+			ImageMaze.Source = generator.ToBitmap(1, 8);
 		}
+		//private void ButtonSearch_Click(object sender, RoutedEventArgs e)
+		//{
+		//	if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
+		//		return;
+		//	if (generator == null)
+		//		ButtonGenerate_Click(sender, e);
+		//	if (!(generator is Searcher))
+		//		generator = new ModifiedDFS(generator);
+		//	Searcher searcher = generator as Searcher;
+		//	searcher.Search(ref canDoNextStep);
+		//	PrintMaze(sender, e);
+		//	ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
+		//	for (int i = 0; i < items.Length; ++i)
+		//	{
+		//		ListBoxItem tmp = new ListBoxItem();
+		//		CheckBox check = new CheckBox();
+		//		tmp.Margin = new Thickness(2, 2, 2, 0);
+		//		check.Content = $"Path {i + 1}";
+		//		check.IsChecked = true;
+		//		check.Click += ListBoxPathsChange;
+		//		tmp.Content = check;
+		//		items[i] = tmp;
+		//	}
+		//	ListBoxPaths.ItemsSource = items;
+		//}	
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
-			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
-				return;
-			if (generator == null)
-				ButtonGenerate_Click(sender, e);
 			if (!(generator is Searcher))
-				generator = new ModifiedDFS(generator);
+				generator = new ModifiedBFS(generator);
 			Searcher searcher = generator as Searcher;
-			searcher.Search(ref canDoNextStep);
-			PrintMaze(sender, e);
+			CancellationTokenSource cancelSource = new CancellationTokenSource();
+			Progress<string> progress = new Progress<string>(s => { OnNextStep(s); UpdatePathsList(); });
+			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
+			searcher.Search(cancelSource.Token, progress, signal);
+			UpdatePathsList();
+		}
+		private void UpdatePathsList()
+		{
+			Searcher searcher = generator as Searcher;
 			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
 			for (int i = 0; i < items.Length; ++i)
 			{
@@ -85,7 +114,7 @@ namespace MazeGenerator
 				items[i] = tmp;
 			}
 			ListBoxPaths.ItemsSource = items;
-		}	
+		}
 		private void PrintMaze(object sender, RoutedEventArgs e)
 		{
 			if (generator == null)
@@ -118,7 +147,8 @@ namespace MazeGenerator
 
 		private void MenuItem_Click(object sender, RoutedEventArgs e)
 		{
-			signal?.Set();
+			if (signal != null && signal.SafeWaitHandle != null)
+				signal.Set();				
 		}
 	}
 }

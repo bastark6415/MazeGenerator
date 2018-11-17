@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using MazeGenerator.Generate;
 using System.Windows.Media;
 using MazeGenerator.Types;
+using System.Threading;
 
 namespace MazeGenerator.Searchers
 {
@@ -22,6 +23,12 @@ namespace MazeGenerator.Searchers
 			Path startPath = new Path();
 			DFS(ref canDoNextStep, generator.start, startPath);
 		}
+
+		protected override void SearchAsync(IProgress<string> progress, ManualResetEvent signal)
+		{
+			throw new NotImplementedException();
+		}
+
 		private void DFS(ref bool? canDoNextStep, Point pnt, Path path)
 		{
 			visited[pnt.y, pnt.x] = true;

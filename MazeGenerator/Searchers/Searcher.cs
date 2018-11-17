@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using MazeGenerator.Generate;
 using MazeGenerator.Types;
 using System.Windows.Media;
+using System.Threading;
 
 namespace MazeGenerator.Searchers
 {
@@ -22,6 +23,9 @@ namespace MazeGenerator.Searchers
 			base.Action(ref canDoNextStep);
 			Search(ref canDoNextStep);
 		}
+		public virtual Task Search(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
+			Task.Run(() => SearchAsync(progress, signal), token);
+		protected abstract void SearchAsync(IProgress<string> progress, ManualResetEvent signal);
 		public abstract void Search(ref bool? canDoNextStep);
 		public override BitmapSource ToBitmap(int wallPx, int cellPx)
 		{

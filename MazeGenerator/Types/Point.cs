@@ -9,5 +9,6 @@ namespace MazeGenerator.Types
     public struct Point
     {
 		public ushort x, y;
+		public Point(ushort x, ushort y) { this.x = x; this.y = y; }
     }
 }

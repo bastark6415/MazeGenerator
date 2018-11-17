@@ -178,8 +178,6 @@ namespace MazeGenerator.Generate
 					break;
 			}
 			progress?.Report($"Generated");
-			signal?.Reset();
-			signal?.WaitOne();
 			signal?.Dispose();
 		}
 		public override void Generate(ref bool? canDoNextStep)
