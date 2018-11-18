@@ -10,12 +10,39 @@
     <DockPanel>
         <Menu VerticalAlignment="Top" Height="Auto" DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Export to">
+                <MenuItem Header="Export to" IsEnabled="False">
                     <MenuItem Header="Bitmap" x:Name="MenuItemBitmap" Click="MenuItemBitmap_Click"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Settings" x:Name="MenuItemSettings"/>
+            <MenuItem Header="Help" x:Name="MenuItemHelp"/>
         </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Padding="3, 0, 3, 2" Grid.Column="0">
+                <TextBlock x:Name="TextBlockStatus" Text="Ready"/>
+            </StatusBarItem>
+            <Separator Grid.Column="1"/>
+            <StatusBarItem Padding="3, 0, 3, 2" Grid.Column="2">
+                <TextBlock x:Name="TextBlockPaths" Text="100000 paths"/>
+            </StatusBarItem>
+            <Separator Grid.Column="3"/>
+            <StatusBarItem Padding="3, 0, 3, 2" Grid.Column="4">
+                <TextBlock x:Name="TextBlockSizes" Text="512 x 512"/>
+            </StatusBarItem>
+        </StatusBar>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="150"/>
@@ -49,14 +76,14 @@
                                   DockPanel.Dock="Top" x:Name="CheckBoxSteps"/>
                         <Button x:Name="ButtonGenerate" Content="Generate" HorizontalAlignment="Stretch"
                                 Margin="0, 5, 0, 0" Click="ButtonGenerate_Click"
-                                DockPanel.Dock="Top"/>
+                                DockPanel.Dock="Top" IsEnabled="False"/>
                         <!--Search paths-->
                         <Button x:Name="ButtonSearch" Content="Search" HorizontalAlignment="Stretch"
-                                Margin="0, 5, 0, 0" DockPanel.Dock="Top"
+                                Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsEnabled="False"
                                 Click="ButtonSearch_Click"/>
                         <!--Cancel-->
                         <Button x:Name="ButtonCancel" Content="Cancel" HorizontalAlignment="Stretch"
-                                Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsCancel="True" Visibility="Collapsed"/>
+                                Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsCancel="True" IsEnabled="False"/>
                         <ListBox x:Name="ListBoxPaths" Margin="0, 5, 0, 0"/>
                     </DockPanel>
                 </Border>
