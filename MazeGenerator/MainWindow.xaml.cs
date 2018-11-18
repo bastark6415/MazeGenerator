@@ -56,6 +56,8 @@ namespace MazeGenerator
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
+			if (generator == null)
+				return;
 			if (!(generator is Searcher))
 				generator = new ModifiedBFS(generator);
 			Searcher searcher = generator as Searcher;

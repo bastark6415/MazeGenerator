@@ -59,7 +59,10 @@ namespace MazeGenerator.Generate
 						cntElementsInSet[setValue] = 0;
 						for (int k = 0; k < width; ++k)
 							if (currRow[k] == setValue)
+							{
 								currRow[k] = currRow[j];
+								++cntElementsInSet[currRow[j]];
+							}
 					}
 					//Progress
 					progress?.Report($"Generating...");
