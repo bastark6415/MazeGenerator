@@ -127,7 +127,7 @@ namespace MazeGenerator.Searchers
 			visited[pnt.y, pnt.x] = false;
 			path.RemovePoint(pnt);
 		}
-		private void SetBlankAsDeadBlock(ushort y, ushort x)
+		private void SetBlankAsDeadBlock(int y, int x)
 		{
 			if (y >= visited.GetLength(0) || x >= visited.GetLength(1))
 				return;
@@ -141,17 +141,17 @@ namespace MazeGenerator.Searchers
 			if (k >= 3)
 			{
 				visited[y, x] = true;
-				if (!generator.mapMatrix[y, x].left)	SetBlankAsDeadBlock(y, (ushort)(x - 1));
-				if (!generator.mapMatrix[y, x].up)		SetBlankAsDeadBlock((ushort)(y - 1), x);
-				if (!generator.mapMatrix[y, x].right)	SetBlankAsDeadBlock(y, (ushort)(x + 1));
-				if (!generator.mapMatrix[y, x].down)	SetBlankAsDeadBlock((ushort)(y + 1), x);
+				if (!generator.mapMatrix[y, x].left)	SetBlankAsDeadBlock(y, (int)(x - 1));
+				if (!generator.mapMatrix[y, x].up)		SetBlankAsDeadBlock((int)(y - 1), x);
+				if (!generator.mapMatrix[y, x].right)	SetBlankAsDeadBlock(y, (int)(x + 1));
+				if (!generator.mapMatrix[y, x].down)	SetBlankAsDeadBlock((int)(y + 1), x);
 			}
 		}
 		private void SetDeadBlocks()
 		{
 			for (int i = 0; i < visited.GetLength(0); ++i)
 				for (int j = 0; j < visited.GetLength(1); ++j)
-					SetBlankAsDeadBlock((ushort)i, (ushort)j);
+					SetBlankAsDeadBlock((int)i, (int)j);
 		}
 	}
 }

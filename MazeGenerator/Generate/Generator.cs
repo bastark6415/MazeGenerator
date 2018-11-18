@@ -12,14 +12,14 @@ namespace MazeGenerator.Generate
 {
 	public abstract class Generator
 	{
-		private const ushort maxDimension = 512;
+		private const int maxDimension = 512;
 		protected enum Direction { left, up, right, down}
 		public Cell[,] mapMatrix { get; protected set; }
 		public Point start { get; protected set; }
 		public Point finish { get; protected set; }
-		public ushort height { get; protected set; }
-		public ushort width { get; protected set; }
-		public Generator(ushort height, ushort width)
+		public int height { get; protected set; }
+		public int width { get; protected set; }
+		public Generator(int height, int width)
 		{
 			if (height > maxDimension || width > maxDimension)
 				throw new ArgumentOutOfRangeException("height or width",
@@ -106,7 +106,7 @@ namespace MazeGenerator.Generate
 			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 			return bitmap;
 		}
-		protected void SetWall(Direction dir, bool value, ushort y, ushort x)
+		protected void SetWall(Direction dir, bool value, int y, int x)
 		{
 			if (y >= height || x >= width)
 				throw new ArgumentOutOfRangeException("x or y", "Coordinate must be less the size of maze");

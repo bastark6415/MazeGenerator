@@ -10,24 +10,24 @@ namespace MazeGenerator.Generate
 {
     public class EllerAlgorithm : Generator
     {
-		public EllerAlgorithm(ushort height, ushort width) : base(height, width) { }
+		public EllerAlgorithm(int height, int width) : base(height, width) { }
 		protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
 		{
-			ushort[] currRow = new ushort[width];
+			int[] currRow = new int[width];
 			bool[] usedSet = new bool[width + 1];
 			Random rand = new Random();
 			//external walls
 			//left right
 			for (int i = 0; i < height; ++i)
 			{
-				SetWall(Direction.left, true, (ushort)i, 0);
-				SetWall(Direction.right, true, (ushort)i, (ushort)(width - 1));
+				SetWall(Direction.left, true, (int)i, 0);
+				SetWall(Direction.right, true, (int)i, (int)(width - 1));
 			}
 			//up down
 			for (int j = 0; j < width; ++j)
 			{
-				SetWall(Direction.up, true, 0, (ushort)j);
-				SetWall(Direction.down, true, (ushort)(height - 1), (ushort)j);
+				SetWall(Direction.up, true, 0, (int)j);
+				SetWall(Direction.down, true, (int)(height - 1), (int)j);
 			}
 			//Progress
 			progress?.Report("Started generating");
@@ -43,16 +43,16 @@ namespace MazeGenerator.Generate
 							if (!usedSet[k])
 							{
 								usedSet[k] = true;
-								currRow[j] = (ushort)k;
+								currRow[j] = (int)k;
 								break;
 							}
 				//create right walls
 				for (int j = 0; j < width - 1; ++j)
 				{
 					if (currRow[j] == currRow[j + 1])
-						SetWall(Direction.right, true, (ushort)i, (ushort)j);
+						SetWall(Direction.right, true, (int)i, (int)j);
 					else if (rand.Next(2) == 1 && i != height - 1)
-						SetWall(Direction.right, true, (ushort)i, (ushort)j);
+						SetWall(Direction.right, true, (int)i, (int)j);
 					else
 					{
 						int setValue = currRow[j + 1];
@@ -79,7 +79,7 @@ namespace MazeGenerator.Generate
 						if (currRow[k] == l)
 							if (rand.Next(2) == 1)
 							{
-								SetWall(Direction.down, true, (ushort)i, (ushort)k);
+								SetWall(Direction.down, true, (int)i, (int)k);
 								--cntCellsInSetWithoutWalls;
 							}
 					//Progress
@@ -104,8 +104,8 @@ namespace MazeGenerator.Generate
 				for (int i = 0; i < cntWalls; ++i)
 				{
 					Point p;
-					p.x = (ushort)rand.Next(1, width - 1);
-					p.y = (ushort)rand.Next(1, height - 1);
+					p.x = (int)rand.Next(1, width - 1);
+					p.y = (int)rand.Next(1, height - 1);
 					int direction = rand.Next(4);
 					switch (direction)
 					{
@@ -135,43 +135,43 @@ namespace MazeGenerator.Generate
 				//left
 				case 0:
 					tmp.x = 0;
-					tmp.y = (ushort)rand.Next(height);
+					tmp.y = (int)rand.Next(height);
 					start = tmp;
 					SetWall(Direction.left, false, start.y, start.x);
-					tmp.x = (ushort)(width - 1);
-					tmp.y = (ushort)rand.Next(height);
+					tmp.x = (int)(width - 1);
+					tmp.y = (int)rand.Next(height);
 					finish = tmp;
 					SetWall(Direction.right, false, finish.y, finish.x);
 					break;
 				//up
 				case 1:
-					tmp.x = (ushort)rand.Next(width);
+					tmp.x = (int)rand.Next(width);
 					tmp.y = 0;
 					start = tmp;
 					SetWall(Direction.up, false, start.y, start.x);
-					tmp.x = (ushort)rand.Next(width);
-					tmp.y = (ushort)(height - 1);
+					tmp.x = (int)rand.Next(width);
+					tmp.y = (int)(height - 1);
 					finish = tmp;
 					SetWall(Direction.down, false, finish.y, finish.x);
 					break;
 				//right
 				case 2:
-					tmp.x = (ushort)(width - 1);
-					tmp.y = (ushort)rand.Next(height);
+					tmp.x = (int)(width - 1);
+					tmp.y = (int)rand.Next(height);
 					start = tmp;
 					SetWall(Direction.right, false, start.y, start.x);
 					tmp.x = 0;
-					tmp.y = (ushort)rand.Next(height);
+					tmp.y = (int)rand.Next(height);
 					finish = tmp;
 					SetWall(Direction.left, false, finish.y, finish.x);
 					break;
 				//down
 				case 3:
-					tmp.x = (ushort)rand.Next(width);
-					tmp.y = (ushort)(height - 1);
+					tmp.x = (int)rand.Next(width);
+					tmp.y = (int)(height - 1);
 					start = tmp;
 					SetWall(Direction.down, false, start.y, start.x);
-					tmp.x = (ushort)rand.Next(width);
+					tmp.x = (int)rand.Next(width);
 					tmp.y = 0;
 					finish = tmp;
 					SetWall(Direction.up, false, finish.y, finish.x);
@@ -182,7 +182,7 @@ namespace MazeGenerator.Generate
 		}
 		public override void Generate(ref bool? canDoNextStep)
 		{
-			ushort[] currRow = new ushort[width];
+			int[] currRow = new int[width];
 			bool[] usedSet = new bool[width + 1];
 			Random rand = new Random();
 			for (int i = 0; i < height; ++i)
@@ -194,16 +194,16 @@ namespace MazeGenerator.Generate
 							if (!usedSet[k])
 							{
 								usedSet[k] = true;
-								currRow[j] = (ushort)k;
+								currRow[j] = (int)k;
 								break;
 							}
 				//create right walls
 				for (int j = 0; j < width - 1; ++j)
 				{
 					if (currRow[j] == currRow[j + 1])
-						SetWall(Direction.right, true, (ushort)i, (ushort)j);
+						SetWall(Direction.right, true, (int)i, (int)j);
 					else if (rand.Next(2) == 1 && i != height - 1)
-						SetWall(Direction.right, true, (ushort)i, (ushort)j);
+						SetWall(Direction.right, true, (int)i, (int)j);
 					else
 					{
 						int setValue = currRow[j + 1];
@@ -227,7 +227,7 @@ namespace MazeGenerator.Generate
 						if (currRow[k] == l)
 							if (rand.Next(2) == 1)
 							{
-								SetWall(Direction.down, true, (ushort)i, (ushort)k);
+								SetWall(Direction.down, true, (int)i, (int)k);
 								--cntCellsInSetWithoutWalls;
 							}
 				}
@@ -248,8 +248,8 @@ namespace MazeGenerator.Generate
 				for (int i = 0; i < cntWalls; ++i)
 				{
 					Point p;
-					p.x = (ushort)rand.Next(1, width - 1);
-					p.y = (ushort)rand.Next(1, height - 1);
+					p.x = (int)rand.Next(1, width - 1);
+					p.y = (int)rand.Next(1, height - 1);
 					int direction = rand.Next(4);
 					switch (direction)
 					{
@@ -272,14 +272,14 @@ namespace MazeGenerator.Generate
 			//left right
 			for (int i = 0; i < height; ++i)
 			{
-				SetWall(Direction.left, true, (ushort)i, 0);
-				SetWall(Direction.right, true, (ushort)i, (ushort)(width - 1));
+				SetWall(Direction.left, true, (int)i, 0);
+				SetWall(Direction.right, true, (int)i, (int)(width - 1));
 			}
 			//up down
 			for (int j = 0; j < width; ++j)
 			{
-				SetWall(Direction.up, true, 0, (ushort)j);
-				SetWall(Direction.down, true, (ushort)(height - 1), (ushort)j);
+				SetWall(Direction.up, true, 0, (int)j);
+				SetWall(Direction.down, true, (int)(height - 1), (int)j);
 			}
 			//random start finish
 			int dir = rand.Next(4);
@@ -289,43 +289,43 @@ namespace MazeGenerator.Generate
 				//left
 				case 0:
 					tmp.x = 0;
-					tmp.y = (ushort)rand.Next(height);
+					tmp.y = (int)rand.Next(height);
 					start = tmp;
 					SetWall(Direction.left, false, start.y, start.x);
-					tmp.x = (ushort)(width - 1);
-					tmp.y = (ushort)rand.Next(height);
+					tmp.x = (int)(width - 1);
+					tmp.y = (int)rand.Next(height);
 					finish = tmp;
 					SetWall(Direction.right, false, finish.y, finish.x);
 					break;
 				//up
 				case 1:
-					tmp.x = (ushort)rand.Next(width);
+					tmp.x = (int)rand.Next(width);
 					tmp.y = 0;
 					start = tmp;
 					SetWall(Direction.up, false, start.y, start.x);
-					tmp.x = (ushort)rand.Next(width);
-					tmp.y = (ushort)(height - 1);
+					tmp.x = (int)rand.Next(width);
+					tmp.y = (int)(height - 1);
 					finish = tmp;
 					SetWall(Direction.down, false, finish.y, finish.x);
 					break;
 				//right
 				case 2:
-					tmp.x = (ushort)(width - 1);
-					tmp.y = (ushort)rand.Next(height);
+					tmp.x = (int)(width - 1);
+					tmp.y = (int)rand.Next(height);
 					start = tmp;
 					SetWall(Direction.right, false, start.y, start.x);
 					tmp.x = 0;
-					tmp.y = (ushort)rand.Next(height);
+					tmp.y = (int)rand.Next(height);
 					finish = tmp;
 					SetWall(Direction.left, false, finish.y, finish.x);
 					break;
 				//down
 				case 3:
-					tmp.x = (ushort)rand.Next(width);
-					tmp.y = (ushort)(height - 1);
+					tmp.x = (int)rand.Next(width);
+					tmp.y = (int)(height - 1);
 					start = tmp;
 					SetWall(Direction.down, false, start.y, start.x);
-					tmp.x = (ushort)rand.Next(width);
+					tmp.x = (int)rand.Next(width);
 					tmp.y = 0;
 					finish = tmp;
 					SetWall(Direction.up, false, finish.y, finish.x);

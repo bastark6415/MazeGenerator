@@ -53,34 +53,34 @@ namespace MazeGenerator.Searchers
 				{
 					//left
 					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].left && lastPoint.x > 0 &&
-						IsNotVisited(tmp, new Point { x = (ushort)(lastPoint.x - 1), y = lastPoint.y} ))
+						IsNotVisited(tmp, new Point { x = (int)(lastPoint.x - 1), y = lastPoint.y} ))
 					{
 						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = (ushort)(lastPoint.x - 1), y = lastPoint.y });
+						p.AddPoint(new Point { x = (int)(lastPoint.x - 1), y = lastPoint.y });
 						allPossiblePaths.Enqueue(p);
 					}
 					//up
 					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].up && lastPoint.y > 0 &&
-						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (ushort)(lastPoint.y - 1) }))
+						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (int)(lastPoint.y - 1) }))
 					{
 						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = lastPoint.x, y = (ushort)(lastPoint.y - 1) });
+						p.AddPoint(new Point { x = lastPoint.x, y = (int)(lastPoint.y - 1) });
 						allPossiblePaths.Enqueue(p);
 					}
 					//right
 					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].right && lastPoint.x < generator.width - 1 &&
-						IsNotVisited(tmp, new Point { x = (ushort)(lastPoint.x + 1), y = lastPoint.y }))
+						IsNotVisited(tmp, new Point { x = (int)(lastPoint.x + 1), y = lastPoint.y }))
 					{
 						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = (ushort)(lastPoint.x + 1), y = lastPoint.y });
+						p.AddPoint(new Point { x = (int)(lastPoint.x + 1), y = lastPoint.y });
 						allPossiblePaths.Enqueue(p);
 					}
 					//down
 					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].down && lastPoint.y < generator.height - 1 &&
-						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (ushort)(lastPoint.y + 1) }))
+						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (int)(lastPoint.y + 1) }))
 					{
 						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = lastPoint.x, y = (ushort)(lastPoint.y + 1) });
+						p.AddPoint(new Point { x = lastPoint.x, y = (int)(lastPoint.y + 1) });
 						allPossiblePaths.Enqueue(p);
 					}
 					//Progress
@@ -98,7 +98,7 @@ namespace MazeGenerator.Searchers
 			signal?.Dispose();
 		}
 		private bool IsNotVisited(Path p, Point point) => !p.ContainsPoint(point) && !deadBlocks[point.y, point.x];
-		private void SetBlankAsDeadBlock(ushort y, ushort x)
+		private void SetBlankAsDeadBlock(int y, int x)
 		{
 			if (y >= deadBlocks.GetLength(0) || x >= deadBlocks.GetLength(1))
 				return;
@@ -112,17 +112,17 @@ namespace MazeGenerator.Searchers
 			if (k >= 3)
 			{
 				deadBlocks[y, x] = true;
-				if (!generator.mapMatrix[y, x].left) SetBlankAsDeadBlock(y, (ushort)(x - 1));
-				if (!generator.mapMatrix[y, x].up) SetBlankAsDeadBlock((ushort)(y - 1), x);
-				if (!generator.mapMatrix[y, x].right) SetBlankAsDeadBlock(y, (ushort)(x + 1));
-				if (!generator.mapMatrix[y, x].down) SetBlankAsDeadBlock((ushort)(y + 1), x);
+				if (!generator.mapMatrix[y, x].left) SetBlankAsDeadBlock(y, (int)(x - 1));
+				if (!generator.mapMatrix[y, x].up) SetBlankAsDeadBlock((int)(y - 1), x);
+				if (!generator.mapMatrix[y, x].right) SetBlankAsDeadBlock(y, (int)(x + 1));
+				if (!generator.mapMatrix[y, x].down) SetBlankAsDeadBlock((int)(y + 1), x);
 			}
 		}
 		private void SetDeadBlocks()
 		{
 			for (int i = 0; i < deadBlocks.GetLength(0); ++i)
 				for (int j = 0; j < deadBlocks.GetLength(1); ++j)
-					SetBlankAsDeadBlock((ushort)i, (ushort)j);
+					SetBlankAsDeadBlock((int)i, (int)j);
 		}
 	}
 }
