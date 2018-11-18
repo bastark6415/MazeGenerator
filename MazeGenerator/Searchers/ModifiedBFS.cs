@@ -85,7 +85,8 @@ namespace MazeGenerator.Searchers
 					}
 					//Progress
 					List<Path> tmpPaths = paths;
-					paths = allPossiblePaths.ToList();
+					if (signal != null) 
+						paths = allPossiblePaths.ToList();
 					progress?.Report($"Searching...");
 					signal?.Reset();
 					signal?.WaitOne();
