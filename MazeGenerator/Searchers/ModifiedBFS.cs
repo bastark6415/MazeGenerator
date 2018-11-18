@@ -29,6 +29,77 @@ namespace MazeGenerator.Searchers
 			SetDeadBlocks();
 			BFS(progress, signal);
 		}
+		private void BFSParallel(IProgress<string> progress, ManualResetEvent signal, 
+			Queue<Path> allPossiblePaths, object locker)
+		{
+			Path tmp;
+			//Search
+			while (true)
+			{
+				lock (locker)
+				{
+					if (allPossiblePaths.Count == 0)
+						break;
+					tmp = allPossiblePaths.Dequeue();
+				}
+				Point lastPoint = tmp.path.Last();
+				if (lastPoint.x == generator.finish.x && lastPoint.y == generator.finish.y)
+				{
+					lock (locker)
+						paths.Add(tmp);
+				}
+				else
+				{
+					//left
+					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].left && lastPoint.x > 0 &&
+						IsNotVisited(tmp, new Point { x = (ushort)(lastPoint.x - 1), y = lastPoint.y }))
+					{
+						Path p = new Path(tmp);
+						p.AddPoint(new Point { x = (ushort)(lastPoint.x - 1), y = lastPoint.y });
+						lock (locker)
+							allPossiblePaths.Enqueue(p);
+					}
+					//up
+					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].up && lastPoint.y > 0 &&
+						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (ushort)(lastPoint.y - 1) }))
+					{
+						Path p = new Path(tmp);
+						p.AddPoint(new Point { x = lastPoint.x, y = (ushort)(lastPoint.y - 1) });
+						lock (locker)
+							allPossiblePaths.Enqueue(p);
+					}
+					//right
+					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].right && lastPoint.x < generator.width - 1 &&
+						IsNotVisited(tmp, new Point { x = (ushort)(lastPoint.x + 1), y = lastPoint.y }))
+					{
+						Path p = new Path(tmp);
+						p.AddPoint(new Point { x = (ushort)(lastPoint.x + 1), y = lastPoint.y });
+						lock (locker)
+							allPossiblePaths.Enqueue(p);
+					}
+					//down
+					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].down && lastPoint.y < generator.height - 1 &&
+						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (ushort)(lastPoint.y + 1) }))
+					{
+						Path p = new Path(tmp);
+						p.AddPoint(new Point { x = lastPoint.x, y = (ushort)(lastPoint.y + 1) });
+						lock (locker)
+							allPossiblePaths.Enqueue(p);
+					}
+					lock (locker)
+					{
+						//Progress
+						List<Path> tmpPaths = paths;
+						if (signal != null)
+							paths = allPossiblePaths.ToList();
+						progress?.Report($"Searching...");
+						signal?.Reset();
+						signal?.WaitOne();
+						paths = tmpPaths;
+					}
+				}
+			}
+		}
 		private void BFS(IProgress<string> progress, ManualResetEvent signal)
 		{
 			//Progress
@@ -40,59 +111,15 @@ namespace MazeGenerator.Searchers
 			Path tmp = new Path();
 			tmp.AddPoint(generator.start);
 			allPossiblePaths.Enqueue(tmp);
-			//Search
-			while(allPossiblePaths.Count != 0)
+			//Parallel BFS
+			Task[] tasks = new Task[4];
+			object locker = new object();
+			for (int i = 0; i < tasks.Length; ++i)
 			{
-				tmp = allPossiblePaths.Dequeue();
-				Point lastPoint = tmp.path.Last();
-				if (lastPoint.x == generator.finish.x && lastPoint.y == generator.finish.y)
-				{
-					paths.Add(tmp);
-				}
-				else
-				{
-					//left
-					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].left && lastPoint.x > 0 &&
-						IsNotVisited(tmp, new Point { x = (ushort)(lastPoint.x - 1), y = lastPoint.y} ))
-					{
-						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = (ushort)(lastPoint.x - 1), y = lastPoint.y });
-						allPossiblePaths.Enqueue(p);
-					}
-					//up
-					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].up && lastPoint.y > 0 &&
-						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (ushort)(lastPoint.y - 1) }))
-					{
-						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = lastPoint.x, y = (ushort)(lastPoint.y - 1) });
-						allPossiblePaths.Enqueue(p);
-					}
-					//right
-					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].right && lastPoint.x < generator.width - 1 &&
-						IsNotVisited(tmp, new Point { x = (ushort)(lastPoint.x + 1), y = lastPoint.y }))
-					{
-						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = (ushort)(lastPoint.x + 1), y = lastPoint.y });
-						allPossiblePaths.Enqueue(p);
-					}
-					//down
-					if (!generator.mapMatrix[lastPoint.y, lastPoint.x].down && lastPoint.y < generator.height - 1 &&
-						IsNotVisited(tmp, new Point { x = lastPoint.x, y = (ushort)(lastPoint.y + 1) }))
-					{
-						Path p = new Path(tmp);
-						p.AddPoint(new Point { x = lastPoint.x, y = (ushort)(lastPoint.y + 1) });
-						allPossiblePaths.Enqueue(p);
-					}
-					//Progress
-					List<Path> tmpPaths = paths;
-					if (signal != null) 
-						paths = allPossiblePaths.ToList();
-					progress?.Report($"Searching...");
-					signal?.Reset();
-					signal?.WaitOne();
-					paths = tmpPaths;
-				}
+				tasks[i] = Task.Run(() => BFSParallel(progress, signal, allPossiblePaths, locker));
+				Task.Delay(1000);
 			}
+			Task.WaitAll(tasks);
 			//Progress
 			progress?.Report($"Search has ended");
 			signal?.Dispose();
