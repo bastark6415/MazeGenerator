@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MazeGenerator"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Maze Generator" Height="450" Width="800">
+        Title="Maze" Height="450" Width="800">
     <DockPanel>
         <Menu VerticalAlignment="Top" Height="Auto" DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -14,6 +14,7 @@
                     <MenuItem Header="Bitmap" x:Name="MenuItemBitmap" Click="MenuItemBitmap_Click"/>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="Settings" x:Name="MenuItemSettings"/>
         </Menu>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -25,10 +26,8 @@
                         Background="GhostWhite" BorderBrush="LightGray"
                         DockPanel.Dock="Top">
                     <DockPanel>
-                        <Button IsDefault="True" Content="press" Click="MenuItem_Click" DockPanel.Dock="Top"></Button>
-                        <Button Content="Cancel" Click="ButtCancell_Click" DockPanel.Dock="Top" x:Name="ButtCancell"></Button>
-                        <Slider x:Name="SliderZoom" Margin="5" Minimum="1" Maximum="4" TickFrequency="1"
-                                Value="1" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
+                        <Slider x:Name="SliderZoom" Margin="5" Minimum="1" Maximum="5" TickFrequency="1"
+                                Value="1" TickPlacement="BottomRight" IsSnapToTickEnabled="True" DockPanel.Dock="Top"/>
                     </DockPanel>
                 </Border>
                 <Border Margin="5, 5, 5, 5" BorderThickness="1" Background="GhostWhite" BorderBrush="LightGray">
@@ -53,9 +52,12 @@
                                 DockPanel.Dock="Top"/>
                         <!--Search paths-->
                         <Button x:Name="ButtonSearch" Content="Search" HorizontalAlignment="Stretch"
-                                Margin="0, 5, 0, 5" DockPanel.Dock="Top"
+                                Margin="0, 5, 0, 0" DockPanel.Dock="Top"
                                 Click="ButtonSearch_Click"/>
-                        <ListBox x:Name="ListBoxPaths"/>
+                        <!--Cancel-->
+                        <Button x:Name="ButtonCancel" Content="Cancel" HorizontalAlignment="Stretch"
+                                Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsCancel="True" Visibility="Collapsed"/>
+                        <ListBox x:Name="ListBoxPaths" Margin="0, 5, 0, 0"/>
                     </DockPanel>
                 </Border>
             </DockPanel>

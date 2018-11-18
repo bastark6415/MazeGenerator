@@ -28,7 +28,6 @@ namespace MazeGenerator
 	public partial class MainWindow : Window
 	{
 		private Generator generator;
-		private bool? canDoNextStep = true;
 		private const int wallPx = 1;
 		private const int cellPx = 4;
 		CancellationTokenSource cancelSource = new CancellationTokenSource();
@@ -59,7 +58,7 @@ namespace MazeGenerator
 			if (generator == null)
 				return;
 			if (!(generator is Searcher))
-				generator = new ModifiedBFS(generator);
+				generator = new ModifiedDFS(generator);
 			Searcher searcher = generator as Searcher;
 			Progress<string> progress = new Progress<string>(s => { OnNextStep(s); UpdatePathsList(s); });
 			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
