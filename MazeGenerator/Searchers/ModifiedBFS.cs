@@ -9,7 +9,7 @@ using MazeGenerator.Types;
 
 namespace MazeGenerator.Searchers
 {
-	class ModifiedBFS : Searcher
+	/*class ModifiedBFS : Searcher
 	{
 		private bool[,] deadBlocks;
 		public ModifiedBFS(Generator generator) : base(generator) { }
@@ -124,5 +124,5 @@ namespace MazeGenerator.Searchers
 				for (int j = 0; j < deadBlocks.GetLength(1); ++j)
 					SetBlankAsDeadBlock((int)i, (int)j);
 		}
-	}
+	}*/
 }

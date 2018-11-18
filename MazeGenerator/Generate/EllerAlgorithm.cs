@@ -68,7 +68,7 @@ namespace MazeGenerator.Generate
 					//Progress
 					if (signal != null)
 					{
-						progress?.Report($"Generating...");
+						progress?.Report("Generating...");
 						signal.Reset();
 						signal.WaitOne();
 					}
@@ -92,7 +92,7 @@ namespace MazeGenerator.Generate
 					//Progress
 					if (signal != null)
 					{
-						progress?.Report($"Generating...");
+						progress?.Report("Generating...");
 						signal.Reset();
 						signal.WaitOne();
 					}
@@ -121,7 +121,7 @@ namespace MazeGenerator.Generate
 					//Progress
 					if (signal != null)
 					{
-						progress?.Report($"Generating...");
+						progress?.Report("Generating...");
 						signal.Reset();
 						signal.WaitOne();
 					}
@@ -173,7 +173,7 @@ namespace MazeGenerator.Generate
 					SetWall(Direction.up, false, finish.y, finish.x);
 					break;
 			}
-			progress?.Report($"Generated");
+			progress?.Report("Generated");
 			signal?.Dispose();
 		}
 	}
