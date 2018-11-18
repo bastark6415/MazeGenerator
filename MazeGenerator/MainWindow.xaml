@@ -26,6 +26,7 @@
                         DockPanel.Dock="Top">
                     <DockPanel>
                         <Button IsDefault="True" Content="press" Click="MenuItem_Click" DockPanel.Dock="Top"></Button>
+                        <Button Content="Cancel" Click="ButtCancell_Click" DockPanel.Dock="Top" x:Name="ButtCancell"></Button>
                         <Slider x:Name="SliderZoom" Margin="5" Minimum="1" Maximum="4" TickFrequency="1"
                                 Value="1" TickPlacement="BottomRight" IsSnapToTickEnabled="True"/>
                     </DockPanel>
@@ -68,6 +69,7 @@
                                         ScaleY="{Binding ElementName=SliderZoom, Path=Value}"/>
                     </Viewbox.LayoutTransform>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           RenderOptions.EdgeMode="Aliased"
                            SnapsToDevicePixels="True"
                            x:Name="ImageMaze"
                            Source="C:\Users\bastark\Downloads\maze.bmp"/>

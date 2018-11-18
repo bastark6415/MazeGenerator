@@ -28,34 +28,35 @@ namespace MazeGenerator.Generate
 			this.height = height;
 			mapMatrix = new Cell[height, width];
 		}
-		public virtual void Action(ref bool? canDoNextStep)
-		{
-			Generate(ref canDoNextStep);
-		}
-		public abstract void Generate(ref bool? canDoNextStep);
 		public virtual Task Generate(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
 			Task.Run(() => GenerateAsync(progress, signal), token);
 		protected abstract void GenerateAsync(IProgress<string> progress, ManualResetEvent signal);
-		protected void SetPixelColor(ref byte[]pixels, Color c, int i, int j, int wall, int cell, int y, int x, int stride)
+		protected void SetPixelColor(ref byte[]pixels, Color c, int yOfCell, int xOfCell, int wallPx, int cellPx, int yInCell, int xInCell, int stride)
 		{
-			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4] = c.B;
-			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 1] = c.G;
-			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 2] = c.R;
-			pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 3] = c.A;
+			int colorIndex = (wallPx + cellPx) * (yOfCell * stride + xOfCell * 4) + yInCell * stride + xInCell * 4;
+			if (colorIndex < 0 || colorIndex > pixels.Length - 4)
+				throw new ArgumentNullException("parameters", "Invalid input parameters");
+			pixels[colorIndex] = c.B;
+			pixels[colorIndex + 1] = c.G;
+			pixels[colorIndex + 2] = c.R;
+			pixels[colorIndex + 3] = c.A;
 		}
-		protected Color GetPixelColor(ref byte[] pixels, int i, int j, int wall, int cell, int y, int x, int stride)
+		protected Color GetPixelColor(ref byte[] pixels, int yOfCell, int xOfCell, int wallPx, int cellPx, int yInCell, int xInCell, int stride)
 		{
+			int colorIndex = (wallPx + cellPx) * (yOfCell * stride + xOfCell * 4) + yInCell * stride + xInCell * 4;
+			if (colorIndex < 0 || colorIndex > pixels.Length - 4)
+				throw new ArgumentNullException("parameters", "Invalid input parameters");
 			Color c = new Color();
-			c.B = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4];
-			c.G = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 1];
-			c.R = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 2];
-			c.A = pixels[(wall + cell) * (i * stride + j * 4) + y * stride + x * 4 + 3];
+			c.B = pixels[colorIndex];
+			c.G = pixels[colorIndex + 1];
+			c.R = pixels[colorIndex + 2];
+			c.A = pixels[colorIndex + 3];
 			return c;
 		}
 		public virtual BitmapSource ToBitmap(int wallPx, int cellPx)
 		{
 			if (wallPx <= 0 || cellPx <= 0)
-				throw new ArgumentOutOfRangeException("wallPx or cellPx", "sizes of wall and cell must be more than 0");
+				throw new ArgumentOutOfRangeException("wallPx or cellPx", "sizes of wall and cell must be greater than 0");
 			int height = this.height * (cellPx + wallPx) + wallPx;
 			int width = this.width * (cellPx + wallPx) + wallPx;
 			PixelFormat pf = PixelFormats.Pbgra32;
@@ -95,21 +96,22 @@ namespace MazeGenerator.Generate
 			}
 			//corners
 			color = Colors.Black;
+			int sumWallCell = wallPx + cellPx;
 			for (int i = 0; i < this.height; ++i)
 				for (int j = 0; j < this.width; ++j)
 				{
 					SetPixelColor(ref pixels, color, i, j, wallPx, cellPx, 0, 0, stride);
-					SetPixelColor(ref pixels, color, i, j, wallPx, cellPx, 0, wallPx + cellPx, stride);
-					SetPixelColor(ref pixels, color, i, j, wallPx, cellPx, wallPx + cellPx, 0, stride);
-					SetPixelColor(ref pixels, color, i, j, wallPx, cellPx, wallPx + cellPx, wallPx + cellPx, stride);
+					SetPixelColor(ref pixels, color, i, j, wallPx, cellPx, 0, sumWallCell, stride);
+					SetPixelColor(ref pixels, color, i, j, wallPx, cellPx, sumWallCell, 0, stride);
+					SetPixelColor(ref pixels, color, i, j, wallPx, cellPx, sumWallCell, sumWallCell, stride);
 				}
 			BitmapSource bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 			return bitmap;
 		}
 		protected void SetWall(Direction dir, bool value, int y, int x)
 		{
-			if (y >= height || x >= width)
-				throw new ArgumentOutOfRangeException("x or y", "Coordinate must be less the size of maze");
+			if (y >= height || x >= width || y < 0 || x < 0)
+				throw new ArgumentOutOfRangeException("x or y", "Coordinate must be not negative and less than size of maze");
 			switch (dir)
 			{
 				case Direction.left:

@@ -31,6 +31,7 @@ namespace MazeGenerator
 		private bool? canDoNextStep = true;
 		private const int wallPx = 1;
 		private const int cellPx = 4;
+		CancellationTokenSource cancelSource = new CancellationTokenSource();
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -41,11 +42,10 @@ namespace MazeGenerator
 			if (string.IsNullOrEmpty(UpDownHeight.Text) || string.IsNullOrEmpty(UpDownWidth.Text))
 				return;
 			generator = new EllerAlgorithm((int)UpDownHeight.Value, (int)UpDownWidth.Value);
-			CancellationTokenSource cancelSource = new CancellationTokenSource();
 			Progress<string> progress = new Progress<string>(s => OnNextStep(s));
 			ListBoxPaths.ItemsSource = null;
 			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
-			generator.Generate(cancelSource.Token, progress, signal);
+			Task task = generator.Generate(cancelSource.Token, progress, signal);
 		}
 		private void OnNextStep(string msg)
 		{
@@ -59,7 +59,6 @@ namespace MazeGenerator
 			if (!(generator is Searcher))
 				generator = new ModifiedBFS(generator);
 			Searcher searcher = generator as Searcher;
-			CancellationTokenSource cancelSource = new CancellationTokenSource();
 			Progress<string> progress = new Progress<string>(s => { OnNextStep(s); UpdatePathsList(s); });
 			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
 			searcher.Search(cancelSource.Token, progress, signal);
@@ -117,6 +116,11 @@ namespace MazeGenerator
 		private void MenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			if (signal != null && !signal.SafeWaitHandle.IsClosed) signal.Set();
+		}
+
+		private void ButtCancell_Click(object sender, RoutedEventArgs e)
+		{
+			cancelSource.Cancel();
 		}
 	}
 }
