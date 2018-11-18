@@ -17,13 +17,13 @@ namespace MazeGenerator.Generate
 		public Cell[,] mapMatrix { get; protected set; }
 		public Point start { get; protected set; }
 		public Point finish { get; protected set; }
-		public int height { get; protected set; }
-		public int width { get; protected set; }
+		public int height { get; private set; }
+		public int width { get; private set; }
 		public Generator(int height, int width)
 		{
-			if (height > maxDimension || width > maxDimension)
+			if (height <= 0 || width <= 0 || height > maxDimension || width > maxDimension)
 				throw new ArgumentOutOfRangeException("height or width",
-					$"Dimentions must not be more than {maxDimension}");
+					$"Dimention must be greater than 0 and less than {maxDimension + 1}");
 			this.width = width;
 			this.height = height;
 			mapMatrix = new Cell[height, width];
