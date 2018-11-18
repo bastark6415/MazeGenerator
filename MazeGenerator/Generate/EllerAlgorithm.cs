@@ -13,6 +13,10 @@ namespace MazeGenerator.Generate
 		public EllerAlgorithm(int height, int width) : base(height, width) { }
 		protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
 		{
+			//Progress
+			progress?.Report("Started generating");
+			signal?.Reset();
+			signal?.WaitOne();
 			int[] currRow = new int[width];
 			bool[] usedSet = new bool[width + 1];
 			Random rand = new Random();
@@ -30,7 +34,7 @@ namespace MazeGenerator.Generate
 				SetWall(Direction.down, true, height - 1, j);
 			}
 			//Progress
-			progress?.Report("Started generating");
+			progress?.Report("Generating...");
 			signal?.Reset();
 			signal?.WaitOne();
 			//Internal walls
@@ -62,9 +66,12 @@ namespace MazeGenerator.Generate
 								currRow[k] = currRow[j];
 					}
 					//Progress
-					progress?.Report($"Generating...");
-					signal?.Reset();
-					signal?.WaitOne();
+					if (signal != null)
+					{
+						progress?.Report($"Generating...");
+						signal.Reset();
+						signal.WaitOne();
+					}
 				}
 				//create down walls
 				for (int l = 1; l <= width; ++l)
@@ -83,9 +90,12 @@ namespace MazeGenerator.Generate
 								--cntCellsInSetWithoutWalls;
 							}
 					//Progress
-					progress?.Report($"Generating...");
-					signal?.Reset();
-					signal?.WaitOne();
+					if (signal != null)
+					{
+						progress?.Report($"Generating...");
+						signal.Reset();
+						signal.WaitOne();
+					}
 				}
 				//update used set
 				for (int j = 1; j <= width; ++j)
@@ -108,9 +118,13 @@ namespace MazeGenerator.Generate
 					p.y = rand.Next(1, height - 1);
 					Direction direction = (Direction)rand.Next(4);
 					SetWall(direction, false, p.y, p.x);
-					progress?.Report($"Generating...");
-					signal?.Reset();
-					signal?.WaitOne();
+					//Progress
+					if (signal != null)
+					{
+						progress?.Report($"Generating...");
+						signal.Reset();
+						signal.WaitOne();
+					}
 				}
 			}
 			//random start finish
