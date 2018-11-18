@@ -14,7 +14,7 @@ namespace MazeGenerator.Generate
 		protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
 		{
 			int[] currRow = new int[width];
-			int[] cntElementsInSet = new int[width + 1];
+			bool[] usedSet = new bool[width + 1];
 			Random rand = new Random();
 			//external walls
 			//left and right
@@ -40,9 +40,9 @@ namespace MazeGenerator.Generate
 				for (int j = 0; j < width; ++j)
 					if (currRow[j] == 0)
 						for (int k = 1; k <= width; ++k)
-							if (cntElementsInSet[k] == 0)
+							if (!usedSet[k])
 							{
-								++cntElementsInSet[k];
+								usedSet[k] = true;
 								currRow[j] = k;
 								break;
 							}
@@ -56,13 +56,10 @@ namespace MazeGenerator.Generate
 					else
 					{
 						int setValue = currRow[j + 1];
-						cntElementsInSet[setValue] = 0;
+						usedSet[setValue] = false;
 						for (int k = 0; k < width; ++k)
 							if (currRow[k] == setValue)
-							{
 								currRow[k] = currRow[j];
-								++cntElementsInSet[currRow[j]];
-							}
 					}
 					//Progress
 					progress?.Report($"Generating...");
@@ -72,19 +69,33 @@ namespace MazeGenerator.Generate
 				//create down walls
 				for (int l = 1; l <= width; ++l)
 				{
-					for (int k = 0; k < width && cntElementsInSet[l] > 1; ++k)
+					if (!usedSet[l])
+						continue;
+					int cntCellsInSetWithoutWalls = 0;
+					for (int j = 0; j < width; ++j)
+						if (currRow[j] == l)
+							++cntCellsInSetWithoutWalls;
+					for (int k = 0; k < width && cntCellsInSetWithoutWalls > 1; ++k)
 						if (currRow[k] == l)
 							if (rand.Next(2) == 1)
 							{
-								SetWall(Direction.down, true, i, k);
-								--cntElementsInSet[l];
-								currRow[k] = 0;
+								SetWall(Direction.down, true, (ushort)i, (ushort)k);
+								--cntCellsInSetWithoutWalls;
 							}
 					//Progress
 					progress?.Report($"Generating...");
 					signal?.Reset();
 					signal?.WaitOne();
 				}
+				//update used set
+				for (int j = 1; j <= width; ++j)
+					usedSet[j] = false;
+				//remove cells with down walls from set
+				for (int j = 0; j < width; ++j)
+					if (mapMatrix[i, j].down)
+						currRow[j] = 0;
+					else
+						usedSet[currRow[j]] = true;
 			}
 			//Random walls removing
 			if (height > 2 && width > 2)
