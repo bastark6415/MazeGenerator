@@ -59,7 +59,7 @@ namespace MazeGenerator
 			if (generator == null)
 				return;
 			if (!(generator is Searcher))
-				generator = new ModifiedBFS(generator);
+				generator = new ModifiedDFS(generator);
 			Searcher searcher = generator as Searcher;
 			Progress<string> progress = new Progress<string>(s => { OnNextStep(s); UpdatePathsList(s); });
 			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;

@@ -63,7 +63,7 @@ namespace MazeGenerator.Searchers
 				LinkedList<Path> tmpPaths = paths;
 				paths = new LinkedList<Path>();
 				paths.AddLast(path);
-				progress?.Report($"Searching...");
+				progress?.Report("Searching...");
 				signal.Reset();
 				signal.WaitOne();
 				paths = tmpPaths;

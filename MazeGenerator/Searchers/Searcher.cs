@@ -43,23 +43,26 @@ namespace MazeGenerator.Searchers
 			Color[] colors = new Color[] {Colors.Blue, Colors.Yellow, Colors.Coral, Colors.Cyan,
 				Colors.Green, Colors.Red, Colors.Violet, Colors.Orange, Colors.Pink,
 				Colors.OrangeRed, Colors.Salmon, Colors.Tomato, Colors.Silver, Colors.PeachPuff,
-				Colors.Navy };
+				Colors.Navy, Colors.BurlyWood };
 			for (int i = 0; i < colors.Length; ++i)
 				colors[i].A = 200;
+			Color c = new Color();
+			Color bg;
+			Color fg;
 			for (int i = 0; i < pathsForShow.Length; ++i)
 			{
 				if (!pathsForShow[i])
 					continue;
+				fg = colors[i % colors.Length];
 				foreach (Point p in paths.ElementAt(i).path)
 				{
 					for (int k = wallPx; k < wallPx + cellPx; ++k)
 					{
 						for (int l = wallPx; l < wallPx + cellPx; ++l)
 						{
-							Color prev = GetPixelColor(ref pixels, p.y, p.x, wallPx, cellPx, k, l, stride);
-							//prev = Color.Add(prev, Color.Multiply(Color.Subtract(colors[i % colors.Length], prev), colors[i % colors.Length].ScA));
-							prev = Color.Add(prev, Color.Multiply(colors[i % colors.Length], colors[i % colors.Length].A));
-							SetPixelColor(ref pixels, prev, p.y, p.x, wallPx, cellPx, k, l, stride);
+							bg = GetPixelColor(ref pixels, p.y, p.x, wallPx, cellPx, k, l, stride);
+							c = Color.Add(bg, Color.Multiply(Color.Subtract(fg, bg), fg.ScA));
+							SetPixelColor(ref pixels, c, p.y, p.x, wallPx, cellPx, k, l, stride);
 						}
 					}
 				}
