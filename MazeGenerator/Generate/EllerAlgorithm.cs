@@ -14,164 +14,132 @@ namespace MazeGenerator.Generate
 		protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
 		{
 			int[] currRow = new int[width];
-			bool[] usedSet = new bool[width + 1];
+			int[] cntElementsInSet = new int[width + 1];
 			Random rand = new Random();
 			//external walls
-			//left right
+			//left and right
 			for (int i = 0; i < height; ++i)
 			{
-				SetWall(Direction.left, true, (int)i, 0);
-				SetWall(Direction.right, true, (int)i, (int)(width - 1));
+				SetWall(Direction.left, true, i, 0);
+				SetWall(Direction.right, true, i, width - 1);
 			}
-			//up down
+			//up and down
 			for (int j = 0; j < width; ++j)
 			{
-				SetWall(Direction.up, true, 0, (int)j);
-				SetWall(Direction.down, true, (int)(height - 1), (int)j);
+				SetWall(Direction.up, true, 0, j);
+				SetWall(Direction.down, true, height - 1, j);
 			}
 			//Progress
 			progress?.Report("Started generating");
 			signal?.Reset();
 			signal?.WaitOne();
-			//Internal part
+			//Internal walls
 			for (int i = 0; i < height; ++i)
 			{
 				//assign for each cell unique set if it hasn't
 				for (int j = 0; j < width; ++j)
 					if (currRow[j] == 0)
 						for (int k = 1; k <= width; ++k)
-							if (!usedSet[k])
+							if (cntElementsInSet[k] == 0)
 							{
-								usedSet[k] = true;
-								currRow[j] = (int)k;
+								++cntElementsInSet[k];
+								currRow[j] = k;
 								break;
 							}
 				//create right walls
 				for (int j = 0; j < width - 1; ++j)
 				{
 					if (currRow[j] == currRow[j + 1])
-						SetWall(Direction.right, true, (int)i, (int)j);
+						SetWall(Direction.right, true, i, j);
 					else if (rand.Next(2) == 1 && i != height - 1)
-						SetWall(Direction.right, true, (int)i, (int)j);
+						SetWall(Direction.right, true, i, j);
 					else
 					{
 						int setValue = currRow[j + 1];
-						usedSet[setValue] = false;
+						cntElementsInSet[setValue] = 0;
 						for (int k = 0; k < width; ++k)
 							if (currRow[k] == setValue)
 								currRow[k] = currRow[j];
 					}
 					//Progress
-					progress?.Report($"Generating({100 * ((1.0 * i * width) / (height * width) + j / (width * 2.0))}%)...");
+					progress?.Report($"Generating...");
 					signal?.Reset();
 					signal?.WaitOne();
 				}
 				//create down walls
 				for (int l = 1; l <= width; ++l)
 				{
-					if (!usedSet[l])
-						continue;
-					int cntCellsInSetWithoutWalls = 0;
-					for (int j = 0; j < width; ++j)
-						if (currRow[j] == l)
-							++cntCellsInSetWithoutWalls;
-					for (int k = 0; k < width && cntCellsInSetWithoutWalls > 1; ++k)
+					for (int k = 0; k < width && cntElementsInSet[l] > 1; ++k)
 						if (currRow[k] == l)
 							if (rand.Next(2) == 1)
 							{
-								SetWall(Direction.down, true, (int)i, (int)k);
-								--cntCellsInSetWithoutWalls;
+								SetWall(Direction.down, true, i, k);
+								--cntElementsInSet[l];
+								currRow[k] = 0;
 							}
 					//Progress
-					progress?.Report($"Generating({100 * ((1.0 * i * width) / (height * width) + (l + width - 2) / (width * 2.0))}%)...");
+					progress?.Report($"Generating...");
 					signal?.Reset();
 					signal?.WaitOne();
 				}
-				//update used set
-				for (int j = 1; j <= width; ++j)
-					usedSet[j] = false;
-				//remove cells with down walls from set
-				for (int j = 0; j < width; ++j)
-					if (mapMatrix[i, j].down)
-						currRow[j] = 0;
-					else
-						usedSet[currRow[j]] = true;
 			}
 			//Random walls removing
 			if (height > 2 && width > 2)
 			{
-				int cntWalls = height * width < 100 ? 1 : (int)Math.Round(height * width * 0.01);
+				int cntWalls = height * width <= 200 ? 1 : (int)Math.Round(height * width * 0.005);
+				Point p;
 				for (int i = 0; i < cntWalls; ++i)
 				{
-					Point p;
-					p.x = (int)rand.Next(1, width - 1);
-					p.y = (int)rand.Next(1, height - 1);
-					int direction = rand.Next(4);
-					switch (direction)
-					{
-						case 0:
-							SetWall(Direction.left, false, p.y, p.x);
-							break;
-						case 1:
-							SetWall(Direction.up, false, p.y, p.x);
-							break;
-						case 2:
-							SetWall(Direction.right, false, p.y, p.x);
-							break;
-						case 3:
-							SetWall(Direction.down, false, p.y, p.x);
-							break;
-					}
-					progress?.Report($"Generating({100 * (1.0 - 1.0 / width + (double)i / cntWalls)}%)...");
+					p.x = rand.Next(1, width - 1);
+					p.y = rand.Next(1, height - 1);
+					Direction direction = (Direction)rand.Next(4);
+					SetWall(direction, false, p.y, p.x);
+					progress?.Report($"Generating...");
 					signal?.Reset();
 					signal?.WaitOne();
 				}
 			}
 			//random start finish
-			int dir = rand.Next(4);
+			Direction dir = (Direction)rand.Next(4);
 			Point tmp;
 			switch (dir)
 			{
-				//left
-				case 0:
+				case Direction.left:
 					tmp.x = 0;
-					tmp.y = (int)rand.Next(height);
+					tmp.y = rand.Next(height);
 					start = tmp;
 					SetWall(Direction.left, false, start.y, start.x);
-					tmp.x = (int)(width - 1);
-					tmp.y = (int)rand.Next(height);
+					tmp.x = width - 1;
+					tmp.y = rand.Next(height);
 					finish = tmp;
 					SetWall(Direction.right, false, finish.y, finish.x);
 					break;
-				//up
-				case 1:
-					tmp.x = (int)rand.Next(width);
+				case Direction.up:
+					tmp.x = rand.Next(width);
 					tmp.y = 0;
 					start = tmp;
 					SetWall(Direction.up, false, start.y, start.x);
-					tmp.x = (int)rand.Next(width);
-					tmp.y = (int)(height - 1);
+					tmp.x = rand.Next(width);
+					tmp.y = height - 1;
 					finish = tmp;
 					SetWall(Direction.down, false, finish.y, finish.x);
 					break;
-				//right
-				case 2:
-					tmp.x = (int)(width - 1);
-					tmp.y = (int)rand.Next(height);
+				case Direction.right:
+					tmp.x = width - 1;
+					tmp.y = rand.Next(height);
 					start = tmp;
 					SetWall(Direction.right, false, start.y, start.x);
 					tmp.x = 0;
-					tmp.y = (int)rand.Next(height);
+					tmp.y = rand.Next(height);
 					finish = tmp;
 					SetWall(Direction.left, false, finish.y, finish.x);
 					break;
-				//down
-				case 3:
-					tmp.x = (int)rand.Next(width);
-					tmp.y = (int)(height - 1);
+				case Direction.down:
+					tmp.x = rand.Next(width);
+					tmp.y = height - 1;
 					start = tmp;
 					SetWall(Direction.down, false, start.y, start.x);
-					tmp.x = (int)rand.Next(width);
+					tmp.x = rand.Next(width);
 					tmp.y = 0;
 					finish = tmp;
 					SetWall(Direction.up, false, finish.y, finish.x);
@@ -179,158 +147,6 @@ namespace MazeGenerator.Generate
 			}
 			progress?.Report($"Generated");
 			signal?.Dispose();
-		}
-		public override void Generate(ref bool? canDoNextStep)
-		{
-			int[] currRow = new int[width];
-			bool[] usedSet = new bool[width + 1];
-			Random rand = new Random();
-			for (int i = 0; i < height; ++i)
-			{
-				//assign for each cell unique set if it hasn't
-				for (int j = 0; j < width; ++j)
-					if (currRow[j] == 0)
-						for (int k = 1; k <= width; ++k)
-							if (!usedSet[k])
-							{
-								usedSet[k] = true;
-								currRow[j] = (int)k;
-								break;
-							}
-				//create right walls
-				for (int j = 0; j < width - 1; ++j)
-				{
-					if (currRow[j] == currRow[j + 1])
-						SetWall(Direction.right, true, (int)i, (int)j);
-					else if (rand.Next(2) == 1 && i != height - 1)
-						SetWall(Direction.right, true, (int)i, (int)j);
-					else
-					{
-						int setValue = currRow[j + 1];
-						usedSet[setValue] = false;
-						for (int k = 0; k < width; ++k)
-							if (currRow[k] == setValue)
-								currRow[k] = currRow[j];
-					}
-
-				}
-				//create down walls
-				for (int l = 1; l <= width; ++l)
-				{
-					if (!usedSet[l])
-						continue;
-					int cntCellsInSetWithoutWalls = 0;
-					for (int j = 0; j < width; ++j)
-						if (currRow[j] == l)
-							++cntCellsInSetWithoutWalls;
-					for (int k = 0; k < width && cntCellsInSetWithoutWalls > 1; ++k)
-						if (currRow[k] == l)
-							if (rand.Next(2) == 1)
-							{
-								SetWall(Direction.down, true, (int)i, (int)k);
-								--cntCellsInSetWithoutWalls;
-							}
-				}
-				//update used set
-				for (int j = 1; j <= width; ++j)
-					usedSet[j] = false;
-				//remove cells with down walls from set
-				for (int j = 0; j < width; ++j)
-					if (mapMatrix[i, j].down)
-						currRow[j] = 0;
-					else
-						usedSet[currRow[j]] = true;
-			}
-			//Rand
-			if (height > 2 && width > 2)
-			{
-				int cntWalls = height * width < 100 ? 1 : (int)Math.Round(height * width * 0.01);
-				for (int i = 0; i < cntWalls; ++i)
-				{
-					Point p;
-					p.x = (int)rand.Next(1, width - 1);
-					p.y = (int)rand.Next(1, height - 1);
-					int direction = rand.Next(4);
-					switch (direction)
-					{
-						case 0:
-							SetWall(Direction.left, false, p.y, p.x);
-							break;
-						case 1:
-							SetWall(Direction.up, false, p.y, p.x);
-							break;
-						case 2:
-							SetWall(Direction.right, false, p.y, p.x);
-							break;
-						case 3:
-							SetWall(Direction.down, false, p.y, p.x);
-							break;
-					}
-				}
-			}
-			//external walls
-			//left right
-			for (int i = 0; i < height; ++i)
-			{
-				SetWall(Direction.left, true, (int)i, 0);
-				SetWall(Direction.right, true, (int)i, (int)(width - 1));
-			}
-			//up down
-			for (int j = 0; j < width; ++j)
-			{
-				SetWall(Direction.up, true, 0, (int)j);
-				SetWall(Direction.down, true, (int)(height - 1), (int)j);
-			}
-			//random start finish
-			int dir = rand.Next(4);
-			Point tmp;
-			switch (dir)
-			{
-				//left
-				case 0:
-					tmp.x = 0;
-					tmp.y = (int)rand.Next(height);
-					start = tmp;
-					SetWall(Direction.left, false, start.y, start.x);
-					tmp.x = (int)(width - 1);
-					tmp.y = (int)rand.Next(height);
-					finish = tmp;
-					SetWall(Direction.right, false, finish.y, finish.x);
-					break;
-				//up
-				case 1:
-					tmp.x = (int)rand.Next(width);
-					tmp.y = 0;
-					start = tmp;
-					SetWall(Direction.up, false, start.y, start.x);
-					tmp.x = (int)rand.Next(width);
-					tmp.y = (int)(height - 1);
-					finish = tmp;
-					SetWall(Direction.down, false, finish.y, finish.x);
-					break;
-				//right
-				case 2:
-					tmp.x = (int)(width - 1);
-					tmp.y = (int)rand.Next(height);
-					start = tmp;
-					SetWall(Direction.right, false, start.y, start.x);
-					tmp.x = 0;
-					tmp.y = (int)rand.Next(height);
-					finish = tmp;
-					SetWall(Direction.left, false, finish.y, finish.x);
-					break;
-				//down
-				case 3:
-					tmp.x = (int)rand.Next(width);
-					tmp.y = (int)(height - 1);
-					start = tmp;
-					SetWall(Direction.down, false, start.y, start.x);
-					tmp.x = (int)rand.Next(width);
-					tmp.y = 0;
-					finish = tmp;
-					SetWall(Direction.up, false, finish.y, finish.x);
-					break;
-			}
 		}
 	}
 }
