@@ -30,7 +30,7 @@ namespace MazeGenerator
 		private Generator generator;
 		private bool? canDoNextStep = true;
 		private const int wallPx = 1;
-		private const int cellPx = 8;
+		private const int cellPx = 4;
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -61,7 +61,7 @@ namespace MazeGenerator
 			//System.Windows.MessageBox.Show(msg);
 			//To Status Bar
 			if ((bool)CheckBoxSteps.IsChecked || msg == "Search has ended" || msg == "Generated")
-				ImageMaze.Source = generator.ToBitmap(1, 8);
+				ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
 		}
 		//private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		//{
@@ -150,7 +150,7 @@ namespace MazeGenerator
 
 		private void MenuItem_Click(object sender, RoutedEventArgs e)
 		{
-			signal.Set();
+			if (signal != null && !signal.SafeWaitHandle.IsClosed) signal.Set();
 		}
 	}
 }
