@@ -21,7 +21,7 @@ namespace MazeGenerator.Generate
 		public int width { get; private set; }
 		public Generator(int height, int width)
 		{
-			if (height <= 0 || width <= 0 || height > maxDimension || width > maxDimension)
+			if (height < 0 || width < 0 || height > maxDimension || width > maxDimension)
 				throw new ArgumentOutOfRangeException("height or width",
 					$"Dimention must be greater than 0 and less than {maxDimension + 1}");
 			this.width = width;
