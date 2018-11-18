@@ -110,7 +110,7 @@ namespace MazeGenerator.Generate
 			//Random walls removing
 			if (height > 2 && width > 2)
 			{
-				int cntWalls = height * width <= 1000 ? 1 : (int)Math.Round(height * width * 0.001);
+				int cntWalls = height * width <= 10000 ? 1 : (int)Math.Round(height * width * 0.0001);
 				Point p;
 				for (int i = 0; i < cntWalls; ++i)
 				{
