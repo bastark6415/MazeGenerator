@@ -38,53 +38,10 @@ namespace MazeGenerator
 			InitializeComponent();
 			ImageMaze.DataContext = converter;
 		}
-		private void ButtonNextStep_Click(object sender, RoutedEventArgs e)
-		{
-			signal.Set();
-		}
-		private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
-		{
-			OnPreGenerating();
-			//Generating
-			generator = new EllerAlgorithm((int)UpDownHeight.Value, (int)UpDownWidth.Value);
-			Progress<string> progress = new Progress<string>((msg) => OnNextStep(msg));
-			cancellationToken = new CancellationTokenSource();
-			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
-			generator.Generate(cancellationToken.Token, progress, signal);
-		}
-		private void OnPreSearch()
-		{
-			if (CheckBoxSteps.IsChecked ?? false)
-				SetStyle(ButtonSearch, Resources["ButtonNextStepStyle"] as Style);
-			else
-				SetIsEnabled(ButtonSearch, false);
-			SetIsEnabled(CheckBoxSteps, false);
-			SetIsEnabled(ButtonGenerate, false);
-			SetIsEnabled(UpDownHeight, false);
-			SetIsEnabled(UpDownWidth, false);
-			SetIsEnabled(MenuItemExportTo, false);
-			SetIsEnabled(ButtonCancel, true);
-			TextBlockPaths.Text = "";
-			UpdateListOfPathes();
-		}
-		private void OnEndSearch()
-		{
-			SetIsEnabled(ButtonCancel, false);
-			SetStyle(ButtonSearch, Resources["ButtonSearchStyle"] as Style);
-			SetIsEnabled(ButtonGenerate, true);
-			SetIsEnabled(ButtonSearch, true);
-			SetIsEnabled(MenuItemExportTo, true);
-			SetIsEnabled(CheckBoxSteps, true);
-			SetIsEnabled(UpDownWidth, true);
-			SetIsEnabled(UpDownHeight, true);
-			TextBlockPaths.Text = $"Paths: {(generator as Searcher)?.paths.Count}";
-			converter.Convert((dynamic)generator);
-			UpdateListOfPathes();
-		}
 		private void OnPreGenerating()
 		{
 			if (CheckBoxSteps.IsChecked ?? false)
-				SetStyle(ButtonGenerate, Resources["ButtonNextStepStyle"] as Style);
+				SetStyle(ButtonGenerate, (Style)Resources["ButtonNextStepStyle"]);
 			else
 				SetIsEnabled(ButtonGenerate, false);
 			SetIsEnabled(CheckBoxSteps, false);
@@ -98,15 +55,44 @@ namespace MazeGenerator
 		}
 		private void OnGenerated()
 		{
+			SetStyle(ButtonGenerate, (Style)Resources["ButtonGenerateStyle"]);
+			SetIsEnabled(ButtonGenerate, true);
+			SetIsEnabled(ButtonSearch, true);
+			SetIsEnabled(CheckBoxSteps, true);
+			SetIsEnabled(UpDownHeight, true);
+			SetIsEnabled(UpDownWidth, true);
+			SetIsEnabled(MenuItemExportTo, true);
 			SetIsEnabled(ButtonCancel, false);
-			SetStyle(ButtonGenerate, Resources["ButtonGenerateStyle"] as Style);
+			TextBlockSizes.Text = $"{generator.height} x {generator.width}";
+			converter.Convert((dynamic)generator);
+			UpdateListOfPathes();
+		}
+		private void OnPreSearch()
+		{
+			if (CheckBoxSteps.IsChecked ?? false)
+				SetStyle(ButtonSearch, (Style)Resources["ButtonNextStepStyle"]);
+			else
+				SetIsEnabled(ButtonSearch, false);
+			SetIsEnabled(ButtonGenerate, false);
+			SetIsEnabled(CheckBoxSteps, false);
+			SetIsEnabled(UpDownHeight, false);
+			SetIsEnabled(UpDownWidth, false);
+			SetIsEnabled(MenuItemExportTo, false);
+			SetIsEnabled(ButtonCancel, true);
+			TextBlockPaths.Text = "";
+			UpdateListOfPathes();
+		}
+		private void OnEndSearch()
+		{
+			SetStyle(ButtonSearch, (Style)Resources["ButtonSearchStyle"]);
 			SetIsEnabled(ButtonGenerate, true);
 			SetIsEnabled(ButtonSearch, true);
 			SetIsEnabled(MenuItemExportTo, true);
 			SetIsEnabled(CheckBoxSteps, true);
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
-			TextBlockSizes.Text = $"{generator.height} x {generator.width}";
+			SetIsEnabled(ButtonCancel, false);
+			TextBlockPaths.Text = $"Paths: {((Searcher)generator).paths.Count}";
 			converter.Convert((dynamic)generator);
 			UpdateListOfPathes();
 		}
@@ -115,10 +101,10 @@ namespace MazeGenerator
 			signal?.Set();
 			cancellationToken = null;
 			SetIsEnabled(ButtonCancel, false);
-			SetStyle(ButtonGenerate, Resources["ButtonGenerateStyle"] as Style);
+			SetStyle(ButtonGenerate, (Style)Resources["ButtonGenerateStyle"]);
 			if (generator is Searcher)
 			{
-				SetStyle(ButtonSearch, Resources["ButtonSearchStyle"] as Style);
+				SetStyle(ButtonSearch, (Style)Resources["ButtonSearchStyle"]);
 				SetIsEnabled(ButtonSearch, true);
 			}
 			SetIsEnabled(ButtonGenerate, true);
@@ -130,6 +116,50 @@ namespace MazeGenerator
 			TextBlockPaths.Text = "";
 			TextBlockSizes.Text = "";
 			converter.Convert((dynamic)generator);
+		}
+		private void OnNextStep(string msg)
+		{
+			TextBlockStatus.Text = msg;
+			if (msg == "Generated")
+				OnGenerated();
+			else if (msg == "Search has ended")
+				OnEndSearch();
+			else if (signal != null)
+				converter.Convert((dynamic)generator);
+		}
+		private void UpdateListOfPathes()
+		{
+			ListBoxPaths.ItemsSource = null;
+			Searcher searcher = generator as Searcher;
+			if (searcher == null)
+				return;
+			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
+			for (int i = 0; i < items.Length; ++i)
+			{
+				ListBoxItem lbi = new ListBoxItem();
+				CheckBox check = new CheckBox();
+				lbi.Margin = new Thickness(2, 2, 2, 0);
+				check.Content = $"Path {i + 1}";
+				check.IsChecked = true;
+				check.Click += ChangeVisiblePaths;
+				lbi.Content = check;
+				items[i] = lbi;
+			}
+			ListBoxPaths.ItemsSource = items;
+		}
+		private void ButtonNextStep_Click(object sender, RoutedEventArgs e)
+		{
+			signal.Set();
+		}
+		private void ButtonGenerate_Click(object sender, RoutedEventArgs e)
+		{
+			OnPreGenerating();
+			//Generating
+			generator = new EllerAlgorithm((int)UpDownHeight.Value, (int)UpDownWidth.Value);
+			Progress<string> progress = new Progress<string>((msg) => OnNextStep(msg));
+			cancellationToken = new CancellationTokenSource();
+			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
+			generator.Generate(cancellationToken.Token, progress, signal);
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
@@ -152,43 +182,18 @@ namespace MazeGenerator
 			cancellationToken = new CancellationTokenSource();
 			(generator as Searcher).Search(cancellationToken.Token, progress, signal);
 		}
-		private void UpdateListOfPathes()
-		{
-			ListBoxPaths.ItemsSource = null;
-			Searcher searcher = generator as Searcher;
-			if (searcher == null)
-				return;
-			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
-			for (int i = 0; i < items.Length; ++i)
-			{
-				ListBoxItem tmp = new ListBoxItem();
-				CheckBox check = new CheckBox();
-				tmp.Margin = new Thickness(2, 2, 2, 0);
-				check.Content = $"Path {i + 1}";
-				check.IsChecked = true;
-				check.Click += ChangeVisiblePaths;
-				tmp.Content = check;
-				items[i] = tmp;
-			}
-			ListBoxPaths.ItemsSource = items;
-		}
 		private void ChangeVisiblePaths(object sender, RoutedEventArgs e)
 		{
 			ItemCollection items = ListBoxPaths.Items;
 			bool[] paths = new bool[items.Count];
 			for (int i = 0; i < paths.Length; ++i)
 				paths[i] = (bool)((items[i] as ListBoxItem).Content as CheckBox).IsChecked;
-			converter.Convert((dynamic)generator);
+			converter.Convert((dynamic)generator, paths);
 		}
-		private void OnNextStep(string msg)
+		private void ButtonCancel_Click(object sender, RoutedEventArgs e)
 		{
-			TextBlockStatus.Text = msg;
-			if (msg == "Generated")
-				OnGenerated();
-			else if (msg == "Search has ended")
-				OnEndSearch();
-			else if (signal != null)
-				converter.Convert((dynamic)generator);
+			cancellationToken.Cancel();
+			OnCancel();
 		}
 		private void UpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) =>
 			SetIsEnabled(ButtonGenerate, UpDownHeight?.Value != null && UpDownWidth?.Value != null);
@@ -204,18 +209,17 @@ namespace MazeGenerator
 		}
 		private void MenuItemBitmap_Click(object sender, RoutedEventArgs e)
 		{
-
+			SaveFileDialog dialog = new SaveFileDialog();
+			dialog.AddExtension = true;
+			dialog.DefaultExt = ".bmp";
+			dialog.Filter = "Bitmap image (*.bmp)|*.bmp";
+			dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			if (dialog.ShowDialog() == true)
+				converter.SaveToFile(dialog.FileName);
 		}
-
 		private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
 		{
-			
-		}
 
-		private void ButtonCancel_Click(object sender, RoutedEventArgs e)
-		{
-			cancellationToken.Cancel();
-			OnCancel();
 		}
 	}
 }
