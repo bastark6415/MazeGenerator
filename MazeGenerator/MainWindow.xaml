@@ -7,6 +7,12 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Maze" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="ButtonNextStepStyle">
+            <Setter Property="Button.Content" Value="Next Step"/>
+            <EventSetter Event="Button.Click" Handler="ButtonNextStep_Click"/>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Menu VerticalAlignment="Top" Height="Auto" DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -64,18 +70,18 @@
                                             Increment="1" Minimum="1" Maximum="512"
                                             MinWidth="75"
                                             Watermark="Height" x:Name="UpDownHeight"
-                                            MaxLength="5"
+                                            MaxLength="5" ParsingNumberStyle="Integer"
                                             DockPanel.Dock="Top"/>
                         <xctk:IntegerUpDown AllowSpin="True" AllowTextInput="True"
                                             Increment="1" Minimum="1" Maximum="512"
                                             MinWidth="75" Margin="0, 5"
                                             Watermark="Width" x:Name="UpDownWidth"
-                                            MaxLength="5"
+                                            MaxLength="5" ParsingNumberStyle="Integer"
                                             DockPanel.Dock="Top"/>
                         <CheckBox Content="Show steps" IsThreeState="False" IsChecked="False"
                                   DockPanel.Dock="Top" x:Name="CheckBoxSteps"/>
                         <Button x:Name="ButtonGenerate" Content="Generate" HorizontalAlignment="Stretch"
-                                Margin="0, 5, 0, 0" Click="ButtonGenerate_Click"
+                                Margin="0, 5, 0, 0"
                                 DockPanel.Dock="Top" IsEnabled="False"/>
                         <!--Search paths-->
                         <Button x:Name="ButtonSearch" Content="Search" HorizontalAlignment="Stretch"

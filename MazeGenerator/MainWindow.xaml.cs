@@ -33,5 +33,10 @@ namespace MazeGenerator
 		{
 			InitializeComponent();
 		}
+
+		private void ButtonNextStep_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 }
