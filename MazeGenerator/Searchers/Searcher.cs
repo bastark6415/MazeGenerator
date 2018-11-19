@@ -40,7 +40,7 @@ namespace MazeGenerator.Searchers
 			int stride = (width * pf.BitsPerPixel + 7) / 8;
 			byte[] pixels = new byte[height * stride];
 			source.CopyPixels(pixels, stride, 0);
-			Color[] colors = new Color[] {Colors.Blue, Colors.Yellow, Colors.Coral, Colors.Cyan,
+			Color[] colors = new Color[] {Colors.Blue, Colors.Coral, Colors.Cyan,
 				Colors.Green, Colors.Red, Colors.Violet, Colors.Orange, Colors.Pink,
 				Colors.OrangeRed, Colors.Salmon, Colors.Tomato, Colors.Silver, Colors.PeachPuff,
 				Colors.Navy, Colors.BurlyWood };

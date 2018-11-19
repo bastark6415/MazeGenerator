@@ -55,7 +55,7 @@ namespace MazeGenerator
 		private void OnPreSearch()
 		{
 			if (CheckBoxSteps.IsChecked ?? false)
-				SetStyle(ButtonSearch, Resources["ButtonSearchStyle"] as Style);
+				SetStyle(ButtonSearch, Resources["ButtonNextStepStyle"] as Style);
 			else
 				SetIsEnabled(ButtonSearch, false);
 			SetIsEnabled(CheckBoxSteps, false);
@@ -65,6 +65,7 @@ namespace MazeGenerator
 			SetIsEnabled(MenuItemExportTo, false);
 			SetIsEnabled(ButtonCancel, true);
 			TextBlockPaths.Text = "";
+			UpdateListOfPathes();
 		}
 		private void OnEndSearch()
 		{
@@ -77,6 +78,8 @@ namespace MazeGenerator
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
 			TextBlockPaths.Text = $"Paths: {(generator as Searcher)?.paths.Count}";
+			ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
+			UpdateListOfPathes();
 		}
 		private void OnPreGenerating()
 		{
@@ -104,6 +107,8 @@ namespace MazeGenerator
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
 			TextBlockSizes.Text = $"{generator.height} x {generator.width}";
+			ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
+			UpdateListOfPathes();
 		}
 		private void OnCancel()
 		{
@@ -146,7 +151,10 @@ namespace MazeGenerator
 		}
 		private void UpdateListOfPathes()
 		{
+			ListBoxPaths.ItemsSource = null;
 			Searcher searcher = generator as Searcher;
+			if (searcher == null)
+				return;
 			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
 			for (int i = 0; i < items.Length; ++i)
 			{
@@ -163,14 +171,20 @@ namespace MazeGenerator
 		}
 		private void ChangeVisiblePaths(object sender, RoutedEventArgs e)
 		{
-			
+			ItemCollection items = ListBoxPaths.Items;
+			bool[] paths = new bool[items.Count];
+			for (int i = 0; i < paths.Length; ++i)
+				paths[i] = (bool)((items[i] as ListBoxItem).Content as CheckBox).IsChecked;
+			ImageMaze.Source = (generator as Searcher).ToBitmap(wallPx, cellPx, paths);
 		}
 		private void OnNextStep(string msg)
 		{
 			TextBlockStatus.Text = msg;
 			if (msg == "Generated")
 				OnGenerated();
-			if (signal != null || msg == "Search has ended" || msg == "Generated")
+			else if (msg == "Search has ended")
+				OnEndSearch();
+			else if (signal != null)
 				//bitmap = generator.ToBitmap(wallPx, cellPx);
 				ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
 		}

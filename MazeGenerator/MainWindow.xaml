@@ -111,7 +111,7 @@
                                 DockPanel.Dock="Top" IsEnabled="False"
                                 Style="{StaticResource ButtonGenerateStyle}"/>
                         <!--Search paths-->
-                        <Button x:Name="ButtonSearch" Content="Search"
+                        <Button x:Name="ButtonSearch"
                                 Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsEnabled="False"
                                 Style="{StaticResource ButtonSearchStyle}"/>
                         <!--Cancel-->
