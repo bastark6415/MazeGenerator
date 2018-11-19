@@ -24,44 +24,6 @@ namespace MazeGenerator.Searchers
 		public virtual Task Search(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
 			Task.Run(() => SearchAsync(token,progress, signal));
 		protected abstract void SearchAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal);
-		public virtual BitmapSource ToBitmap(int wallPx, int cellPx, bool[] pathsForShow)
-		{
-			BitmapSource source = base.ToBitmap(wallPx, cellPx);
-			PixelFormat pf = PixelFormats.Bgra32;
-			int height = this.height * (cellPx + wallPx) + wallPx;
-			int width = this.width * (cellPx + wallPx) + wallPx;
-			int stride = (width * pf.BitsPerPixel + 7) / 8;
-			byte[] pixels = new byte[height * stride];
-			source.CopyPixels(pixels, stride, 0);
-			Color[] colors = new Color[] {Colors.Blue, Colors.Coral, Colors.Cyan,
-				Colors.Green, Colors.Red, Colors.Violet, Colors.Orange, Colors.Pink,
-				Colors.OrangeRed, Colors.Salmon, Colors.Tomato, Colors.Silver, Colors.PeachPuff,
-				Colors.Navy, Colors.BurlyWood };
-			for (int i = 0; i < colors.Length; ++i)
-				colors[i].A = 200;
-			Color c = new Color();
-			Color bg;
-			Color fg;
-			for (int i = 0; i < pathsForShow.Length; ++i)
-			{
-				if (!pathsForShow[i])
-					continue;
-				fg = colors[i % colors.Length];
-				foreach (Point p in paths.ElementAt(i).path)
-				{
-					for (int k = wallPx; k < wallPx + cellPx; ++k)
-					{
-						for (int l = wallPx; l < wallPx + cellPx; ++l)
-						{
-							bg = GetPixelColor(ref pixels, p.y, p.x, wallPx, cellPx, k, l, stride);
-							c = Color.Add(bg, Color.Multiply(Color.Subtract(fg, bg), fg.ScA));
-							SetPixelColor(ref pixels, c, p.y, p.x, wallPx, cellPx, k, l, stride);
-						}
-					}
-				}
-			}
-			return BitmapSource.Create(width, height, 96, 96, pf, null, pixels, stride);
-		}
 		protected void SetBlankAsDeadBlock(int y, int x)
 		{
 			if (visited[y, x])
