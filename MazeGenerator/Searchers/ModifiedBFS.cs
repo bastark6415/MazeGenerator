@@ -15,7 +15,7 @@ namespace MazeGenerator.Searchers
 		protected override void SearchAsync(IProgress<string> progress, ManualResetEvent signal)
 		{
 			//Progress
-			progress?.Report("Started search");
+			progress?.Report("Searching...");
 			signal?.Reset();
 			signal?.WaitOne();
 			//Search

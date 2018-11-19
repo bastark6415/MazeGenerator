@@ -6,22 +6,53 @@
         xmlns:local="clr-namespace:MazeGenerator"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Maze" Height="450" Width="800">
+        Title="Maze" Height="480" Width="640" MinWidth="640" MinHeight="480">
     <Window.Resources>
-        <Style x:Key="ButtonNextStepStyle">
-            <Setter Property="Button.Content" Value="Next Step"/>
-            <EventSetter Event="Button.Click" Handler="ButtonNextStep_Click"/>
+        <Style TargetType="Border">
+            <Setter Property="Background" Value="GhostWhite"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+        </Style>
+        <Style TargetType="xctk:IntegerUpDown">
+            <Setter Property="AllowSpin" Value="True"/>
+            <Setter Property="AllowTextInput" Value="True"/>
+            <Setter Property="Increment" Value="1"/>
+            <Setter Property="Minimum" Value="1"/>
+            <Setter Property="Maximum" Value="512"/>
+            <Setter Property="MinWidth" Value="75"/>
+            <Setter Property="MaxLength" Value="5"/>
+            <Setter Property="ParsingNumberStyle" Value="Integer"/>
+            <EventSetter Event="ValueChanged" Handler="UpDown_ValueChanged"/>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Button.HorizontalAlignment" Value="Stretch"/>
+        </Style>
+        <Style x:Key="ButtonNextStepStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Content" Value="Next Step"/>
+            <EventSetter Event="Click" Handler="ButtonNextStep_Click"/>
+        </Style>
+        <Style x:Key="ButtonGenerateStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Style.Setters>
+                <Setter Property="Content" Value="Generate"/>
+                <EventSetter Event="Click" Handler="ButtonGenerate_Click"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="ButtonSearchStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Style.Setters>
+                <Setter Property="Content" Value="Search"/>
+                <EventSetter Event="Click" Handler="ButtonSearch_Click"/>
+            </Style.Setters>
         </Style>
     </Window.Resources>
     <DockPanel>
         <Menu VerticalAlignment="Top" Height="Auto" DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Export to" IsEnabled="False">
+                <MenuItem Header="Export to" IsEnabled="False" x:Name="MenuItemExportTo">
                     <MenuItem Header="Bitmap" x:Name="MenuItemBitmap" Click="MenuItemBitmap_Click"/>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Settings" x:Name="MenuItemSettings"/>
-            <MenuItem Header="Help" x:Name="MenuItemHelp"/>
+            <MenuItem Header="Settings" x:Name="MenuItemSettings" Click="MenuItemSettings_Click"/>
+            <MenuItem Header="Help" x:Name="MenuItemHelp" Click="MenuItemHelp_Click"/>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBar.ItemsPanel>
@@ -42,11 +73,11 @@
             </StatusBarItem>
             <Separator Grid.Column="1"/>
             <StatusBarItem Padding="3, 0, 3, 2" Grid.Column="2">
-                <TextBlock x:Name="TextBlockPaths" Text="100000 paths"/>
+                <TextBlock x:Name="TextBlockPaths"/>
             </StatusBarItem>
             <Separator Grid.Column="3"/>
             <StatusBarItem Padding="3, 0, 3, 2" Grid.Column="4">
-                <TextBlock x:Name="TextBlockSizes" Text="512 x 512"/>
+                <TextBlock x:Name="TextBlockSizes"/>
             </StatusBarItem>
         </StatusBar>
         <Grid>
@@ -54,50 +85,47 @@
                 <ColumnDefinition Width="Auto" MinWidth="150"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <!--Control-->
             <DockPanel Grid.Column="0" LastChildFill="True">
-                <Border Margin="5, 5, 5, 0" BorderThickness="1" 
-                        Background="GhostWhite" BorderBrush="LightGray"
+                <!--Zoom-->
+                <Border Margin="5, 5, 5, 0"
                         DockPanel.Dock="Top">
                     <DockPanel>
                         <Slider x:Name="SliderZoom" Margin="5" Minimum="1" Maximum="5" TickFrequency="1"
                                 Value="1" TickPlacement="BottomRight" IsSnapToTickEnabled="True" DockPanel.Dock="Top"/>
                     </DockPanel>
                 </Border>
-                <Border Margin="5, 5, 5, 5" BorderThickness="1" Background="GhostWhite" BorderBrush="LightGray">
+                <!--Control-->
+                <Border Margin="5, 5, 5, 5">
                     <DockPanel Margin="5" VerticalAlignment="Stretch" LastChildFill="True">
                         <!--Generating-->
-                        <xctk:IntegerUpDown AllowSpin="True" AllowTextInput="True"
-                                            Increment="1" Minimum="1" Maximum="512"
-                                            MinWidth="75"
-                                            Watermark="Height" x:Name="UpDownHeight"
-                                            MaxLength="5" ParsingNumberStyle="Integer"
+                        <xctk:IntegerUpDown Watermark="Height" x:Name="UpDownHeight"
                                             DockPanel.Dock="Top"/>
-                        <xctk:IntegerUpDown AllowSpin="True" AllowTextInput="True"
-                                            Increment="1" Minimum="1" Maximum="512"
-                                            MinWidth="75" Margin="0, 5"
+                        <xctk:IntegerUpDown Margin="0, 5"
                                             Watermark="Width" x:Name="UpDownWidth"
-                                            MaxLength="5" ParsingNumberStyle="Integer"
                                             DockPanel.Dock="Top"/>
                         <CheckBox Content="Show steps" IsThreeState="False" IsChecked="False"
                                   DockPanel.Dock="Top" x:Name="CheckBoxSteps"/>
-                        <Button x:Name="ButtonGenerate" Content="Generate" HorizontalAlignment="Stretch"
+                        <Button x:Name="ButtonGenerate"
                                 Margin="0, 5, 0, 0"
-                                DockPanel.Dock="Top" IsEnabled="False"/>
+                                DockPanel.Dock="Top" IsEnabled="False"
+                                Style="{StaticResource ButtonGenerateStyle}"/>
                         <!--Search paths-->
-                        <Button x:Name="ButtonSearch" Content="Search" HorizontalAlignment="Stretch"
+                        <Button x:Name="ButtonSearch" Content="Search"
                                 Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsEnabled="False"
-                                Click="ButtonSearch_Click"/>
+                                Style="{StaticResource ButtonSearchStyle}"/>
                         <!--Cancel-->
-                        <Button x:Name="ButtonCancel" Content="Cancel" HorizontalAlignment="Stretch"
-                                Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsCancel="True" IsEnabled="False"/>
+                        <Button x:Name="ButtonCancel" Style="{StaticResource ButtonStyle}" Content="Cancel"
+                                Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsCancel="True" IsEnabled="False"
+                                Click="ButtonCancel_Click"/>
                         <ListBox x:Name="ListBoxPaths" Margin="0, 5, 0, 0"/>
                     </DockPanel>
                 </Border>
             </DockPanel>
             <!--Image-->
             <ScrollViewer Grid.Column="1"
-                          HorizontalScrollBarVisibility="Auto"
-                          VerticalScrollBarVisibility="Auto">
+                          HorizontalScrollBarVisibility="Visible"
+                          VerticalScrollBarVisibility="Visible">
                 <Viewbox Stretch="None">
                     <Viewbox.LayoutTransform>
                         <ScaleTransform ScaleX="{Binding ElementName=SliderZoom, Path=Value}" 
@@ -107,7 +135,9 @@
                            RenderOptions.EdgeMode="Aliased"
                            SnapsToDevicePixels="True"
                            x:Name="ImageMaze"
-                           Source="C:\Users\bastark\Downloads\maze.bmp"/>
+                           Source="{Binding Source=MainWindow, Path=bitmap, Mode=OneWay, 
+                                    UpdateSourceTrigger=PropertyChanged,
+                                    TargetNullValue=C:\Users\bastark\Downloads\maze.bmp}"/>
                 </Viewbox>
             </ScrollViewer>
         </Grid>

@@ -19,7 +19,7 @@ namespace MazeGenerator.Searchers
 		{
 			paths.Clear();
 			//Progress
-			progress?.Report("Started search");
+			progress?.Report("Searching...");
 			signal?.Reset();
 			signal?.WaitOne();
 			DFS(progress, signal, generator.start, new Path());

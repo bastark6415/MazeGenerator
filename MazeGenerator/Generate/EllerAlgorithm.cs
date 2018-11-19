@@ -13,10 +13,6 @@ namespace MazeGenerator.Generate
 		public EllerAlgorithm(int height, int width) : base(height, width) { }
 		protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
 		{
-			//Progress
-			progress?.Report("Started generating");
-			signal?.Reset();
-			signal?.WaitOne();
 			int[] currRow = new int[width];
 			bool[] usedSet = new bool[width + 1];
 			Random rand = new Random();
