@@ -146,6 +146,23 @@ namespace MazeGenerator
 		}
 		private void UpdateListOfPathes()
 		{
+			Searcher searcher = generator as Searcher;
+			ListBoxItem[] items = new ListBoxItem[searcher.paths.Count];
+			for (int i = 0; i < items.Length; ++i)
+			{
+				ListBoxItem tmp = new ListBoxItem();
+				CheckBox check = new CheckBox();
+				tmp.Margin = new Thickness(2, 2, 2, 0);
+				check.Content = $"Path {i + 1}";
+				check.IsChecked = true;
+				check.Click += ChangeVisiblePaths;
+				tmp.Content = check;
+				items[i] = tmp;
+			}
+			ListBoxPaths.ItemsSource = items;
+		}
+		private void ChangeVisiblePaths(object sender, RoutedEventArgs e)
+		{
 			
 		}
 		private void OnNextStep(string msg)
