@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Additional\Converter.cs" />
     <Compile Include="Generate\EllerAlgorithm.cs" />
     <Compile Include="Generate\Generator.cs" />
     <Compile Include="Generate\GeneratorDecorator.cs" />

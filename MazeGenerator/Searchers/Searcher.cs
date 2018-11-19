@@ -24,13 +24,6 @@ namespace MazeGenerator.Searchers
 		public virtual Task Search(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
 			Task.Run(() => SearchAsync(token,progress, signal));
 		protected abstract void SearchAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal);
-		public override BitmapSource ToBitmap(int wallPx, int cellPx)
-		{
-			bool[] allPaths = new bool[paths.Count];
-			for (int i = 0; i < allPaths.Length; ++i)
-				allPaths[i] = true;
-			return ToBitmap(wallPx, cellPx, allPaths);
-		}
 		public virtual BitmapSource ToBitmap(int wallPx, int cellPx, bool[] pathsForShow)
 		{
 			BitmapSource source = base.ToBitmap(wallPx, cellPx);
