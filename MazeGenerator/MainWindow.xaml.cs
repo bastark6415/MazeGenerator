@@ -30,7 +30,7 @@ namespace MazeGenerator
 		private const int wallPx = 1;
 		private const int cellPx = 4;
 		private Generator generator;
-		private CancellationTokenSource cancellationToken = new CancellationTokenSource();
+		private CancellationTokenSource cancellationToken;
 		private ManualResetEvent signal;
 		private BitmapSource bitmap;
 		public MainWindow()
@@ -52,6 +52,32 @@ namespace MazeGenerator
 			signal = (bool)CheckBoxSteps.IsChecked ? new ManualResetEvent(false) : null;
 			generator.Generate(cancellationToken.Token, progress, signal);
 		}
+		private void OnPreSearch()
+		{
+			if (CheckBoxSteps.IsChecked ?? false)
+				SetStyle(ButtonSearch, Resources["ButtonSearchStyle"] as Style);
+			else
+				SetIsEnabled(ButtonSearch, false);
+			SetIsEnabled(CheckBoxSteps, false);
+			SetIsEnabled(ButtonGenerate, false);
+			SetIsEnabled(UpDownHeight, false);
+			SetIsEnabled(UpDownWidth, false);
+			SetIsEnabled(MenuItemExportTo, false);
+			SetIsEnabled(ButtonCancel, true);
+			TextBlockPaths.Text = "";
+		}
+		private void OnEndSearch()
+		{
+			SetIsEnabled(ButtonCancel, false);
+			SetStyle(ButtonSearch, Resources["ButtonSearchStyle"] as Style);
+			SetIsEnabled(ButtonGenerate, true);
+			SetIsEnabled(ButtonSearch, true);
+			SetIsEnabled(MenuItemExportTo, true);
+			SetIsEnabled(CheckBoxSteps, true);
+			SetIsEnabled(UpDownWidth, true);
+			SetIsEnabled(UpDownHeight, true);
+			TextBlockPaths.Text = $"Paths: {(generator as Searcher)?.paths.Count}";
+		}
 		private void OnPreGenerating()
 		{
 			if (CheckBoxSteps.IsChecked ?? false)
@@ -64,6 +90,8 @@ namespace MazeGenerator
 			SetIsEnabled(UpDownWidth, false);
 			SetIsEnabled(MenuItemExportTo, false);
 			SetIsEnabled(ButtonCancel, true);
+			TextBlockPaths.Text = "";
+			TextBlockSizes.Text = "";
 		}
 		private void OnGenerated()
 		{
@@ -75,6 +103,7 @@ namespace MazeGenerator
 			SetIsEnabled(CheckBoxSteps, true);
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
+			TextBlockSizes.Text = $"{generator.height} x {generator.width}";
 		}
 		private void OnCancel()
 		{
@@ -96,7 +125,28 @@ namespace MazeGenerator
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
-
+			OnPreSearch();
+			//Search
+			if (!(generator is Searcher))
+				generator = new ModifiedDFS(generator);
+			Action<string> action;
+			if ((bool)CheckBoxSteps.IsChecked)
+			{
+				action = msg => { OnNextStep(msg); UpdateListOfPathes(); };
+				signal = new ManualResetEvent(false);
+			}
+			else
+			{
+				action = msg => OnNextStep(msg);
+				signal = null;
+			}
+			Progress<string> progress = new Progress<string>(action);
+			cancellationToken = new CancellationTokenSource();
+			(generator as Searcher).Search(cancellationToken.Token, progress, signal);
+		}
+		private void UpdateListOfPathes()
+		{
+			
 		}
 		private void OnNextStep(string msg)
 		{
@@ -136,7 +186,7 @@ namespace MazeGenerator
 
 		private void ButtonCancel_Click(object sender, RoutedEventArgs e)
 		{
-			cancellationToken.Cancel(true);
+			cancellationToken.Cancel();
 			OnCancel();
 		}
 	}
