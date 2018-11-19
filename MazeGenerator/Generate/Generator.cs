@@ -29,8 +29,8 @@ namespace MazeGenerator.Generate
 			mapMatrix = new Cell[height, width];
 		}
 		public virtual Task Generate(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
-			Task.Run(() => GenerateAsync(progress, signal), token);
-		protected abstract void GenerateAsync(IProgress<string> progress, ManualResetEvent signal);
+			Task.Run(() => GenerateAsync(token, progress, signal));
+		protected abstract void GenerateAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal);
 		protected void SetPixelColor(ref byte[]pixels, Color c, int yOfCell, int xOfCell, int wallPx, int cellPx, int yInCell, int xInCell, int stride)
 		{
 			int colorIndex = (wallPx + cellPx) * (yOfCell * stride + xOfCell * 4) + yInCell * stride + xInCell * 4;

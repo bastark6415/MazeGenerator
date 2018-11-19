@@ -22,8 +22,8 @@ namespace MazeGenerator.Searchers
 			SetDeadBlocks();
 		}
 		public virtual Task Search(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
-			Task.Run(() => SearchAsync(progress, signal), token);
-		protected abstract void SearchAsync(IProgress<string> progress, ManualResetEvent signal);
+			Task.Run(() => SearchAsync(token,progress, signal));
+		protected abstract void SearchAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal);
 		public override BitmapSource ToBitmap(int wallPx, int cellPx)
 		{
 			bool[] allPaths = new bool[paths.Count];

@@ -11,7 +11,7 @@ namespace MazeGenerator.Generate
     public class EllerAlgorithm : Generator
     {
 		public EllerAlgorithm(int height, int width) : base(height, width) { }
-		protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
+		protected override void GenerateAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
 			int[] currRow = new int[width];
 			bool[] usedSet = new bool[width + 1];
@@ -36,6 +36,19 @@ namespace MazeGenerator.Generate
 			//Internal walls
 			for (int i = 0; i < height; ++i)
 			{
+				//Cancell
+				try
+				{
+					token.ThrowIfCancellationRequested();
+				}
+				catch (OperationCanceledException)
+				{
+					return;
+				}
+				catch (ObjectDisposedException ex)
+				{
+					throw ex;
+				}
 				//assign for each cell unique set if it hasn't
 				for (int j = 0; j < width; ++j)
 					if (currRow[j] == 0)

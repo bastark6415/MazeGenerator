@@ -22,7 +22,7 @@ namespace MazeGenerator.Generate
 			this.generator = generator;
 		}
 		public override BitmapSource ToBitmap(int wallPx, int cellPx) => generator.ToBitmap(wallPx, cellPx);
-		sealed protected override void GenerateAsync(IProgress<string> progress, ManualResetEvent signal)
+		sealed protected override void GenerateAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
 			throw new NotImplementedException();
 		}

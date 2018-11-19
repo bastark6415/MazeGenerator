@@ -12,7 +12,7 @@ namespace MazeGenerator.Searchers
 	class ModifiedBFS : Searcher
 	{
 		public ModifiedBFS(Generator generator) : base(generator) { }
-		protected override void SearchAsync(IProgress<string> progress, ManualResetEvent signal)
+		protected override void SearchAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
 			//Progress
 			progress?.Report("Searching...");
@@ -20,12 +20,12 @@ namespace MazeGenerator.Searchers
 			signal?.WaitOne();
 			//Search
 			paths.Clear();
-			BFS(progress, signal);
+			BFS(token, progress, signal);
 			//Progress
 			progress?.Report("Search has ended");
 			signal?.Dispose();
 		}
-		private void BFS(IProgress<string> progress, ManualResetEvent signal)
+		private void BFS(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
 			//Initialize path
 			LinkedList<Path> allPossiblePaths = new LinkedList<Path>();
@@ -35,6 +35,19 @@ namespace MazeGenerator.Searchers
 			//Search
 			while(allPossiblePaths.Count != 0)
 			{
+				//Cancell
+				try
+				{
+					token.ThrowIfCancellationRequested();
+				}
+				catch (OperationCanceledException)
+				{
+					return;
+				}
+				catch (ObjectDisposedException ex)
+				{
+					throw ex;
+				}
 				tmp = allPossiblePaths.First.Value;
 				allPossiblePaths.RemoveFirst();
 				Point lastPoint = tmp.path.Last.Value;

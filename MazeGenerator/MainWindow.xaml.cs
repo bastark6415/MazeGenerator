@@ -136,7 +136,7 @@ namespace MazeGenerator
 
 		private void ButtonCancel_Click(object sender, RoutedEventArgs e)
 		{
-			cancellationToken.Cancel();
+			cancellationToken.Cancel(true);
 			OnCancel();
 		}
 	}
