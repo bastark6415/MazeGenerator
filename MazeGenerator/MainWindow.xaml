@@ -134,8 +134,8 @@
             </DockPanel>
             <!--Image-->
             <ScrollViewer Grid.Column="1"
-                          HorizontalScrollBarVisibility="Visible"
-                          VerticalScrollBarVisibility="Visible">
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
                 <Viewbox Stretch="None">
                     <Viewbox.LayoutTransform>
                         <ScaleTransform ScaleX="{Binding ElementName=SliderZoom, Path=Value}" 
