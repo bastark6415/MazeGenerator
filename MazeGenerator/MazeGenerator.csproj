@@ -76,7 +76,6 @@
     <Compile Include="Generate\EllerAlgorithm.cs" />
     <Compile Include="Generate\Generator.cs" />
     <Compile Include="Generate\GeneratorDecorator.cs" />
-    <Compile Include="Searchers\ModifiedBFS.cs" />
     <Compile Include="Searchers\ModifiedDFS.cs" />
     <Compile Include="Searchers\Searcher.cs" />
     <Compile Include="Types\Cell.cs" />

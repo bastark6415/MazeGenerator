@@ -8,12 +8,28 @@ using MazeGenerator.Searchers;
 using MazeGenerator.Generate;
 using System.Windows.Media;
 using MazeGenerator.Types;
+using System.IO;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace MazeGenerator.Additional
 {
-	class ConverterToBitmap
+	public class ConverterToBitmap : INotifyPropertyChanged
 	{
-		public BitmapSource bitmap { get; protected set; }
+		private BitmapSource bitmap;
+		public BitmapSource Bitmap 
+		{ 
+			get { return bitmap; }
+			protected set
+			{
+				if (bitmap != value)
+				{
+					bitmap = value;
+					OnPropertyChanged("Bitmap");
+				}
+			}
+		}
+		public event PropertyChangedEventHandler PropertyChanged;
 		public int wallPx { get; protected set; }
 		public int cellPx { get; protected set; }
 		protected readonly Color[] colors = new Color[] {Colors.Blue, Colors.Coral, Colors.Cyan,
@@ -28,6 +44,10 @@ namespace MazeGenerator.Additional
 			this.cellPx = cellPx;
 			for (int i = 0; i < colors.Length; ++i)
 				colors[i].A = 200;
+		}
+		public void OnPropertyChanged(string prop)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 		}
 		protected void SetPixelColor(ref byte[] pixels, Color c, int yOfCell, int xOfCell, int yInCell, int xInCell, int stride)
 		{
@@ -103,7 +123,7 @@ namespace MazeGenerator.Additional
 					SetPixelColor(ref pixels, color, i, j, sumWallCell, 0, stride);
 					SetPixelColor(ref pixels, color, i, j, sumWallCell, sumWallCell, stride);
 				}
-			bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
+			Bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 		}
 		public void Convert(Searcher searcher)
 		{
@@ -118,13 +138,13 @@ namespace MazeGenerator.Additional
 		{
 			if (searcher == null)
 				throw new ArgumentNullException("searcher", "Argument can't be null");
-			Convert(searcher as Generator);
+			Convert(searcher.generator);
 			PixelFormat pf = PixelFormats.Bgra32;
 			int height = searcher.height * (cellPx + wallPx) + wallPx;
 			int width = searcher.width * (cellPx + wallPx) + wallPx;
 			int stride = (width * pf.BitsPerPixel + 7) / 8;
 			byte[] pixels = new byte[height * stride];
-			bitmap.CopyPixels(pixels, stride, 0);
+			Bitmap.CopyPixels(pixels, stride, 0);
 			Color c = new Color();
 			Color bg;
 			Color fg;
@@ -146,11 +166,14 @@ namespace MazeGenerator.Additional
 					}
 				}
 			}
-			bitmap = BitmapSource.Create(width, height, 96, 96, pf, null, pixels, stride);
+			Bitmap = BitmapSource.Create(width, height, 96, 96, pf, null, pixels, stride);
 		}
 		public void SaveToFile(string path)
 		{
-			
+			BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+			encoder.Frames.Add(BitmapFrame.Create(Bitmap));
+			using (FileStream stream = new FileStream(path, FileMode.Create))
+				encoder.Save(stream);
 		}
 	}
 }

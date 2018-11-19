@@ -19,6 +19,8 @@ using System.IO;
 using Microsoft.Win32;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using MazeGenerator.Additional;
+using System.ComponentModel;
 
 namespace MazeGenerator
 {
@@ -27,17 +29,15 @@ namespace MazeGenerator
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private const int wallPx = 1;
-		private const int cellPx = 4;
 		private Generator generator;
 		private CancellationTokenSource cancellationToken;
 		private ManualResetEvent signal;
-		private BitmapSource bitmap;
+		private ConverterToBitmap converter { get; set; } = new ConverterToBitmap(1, 4);
 		public MainWindow()
 		{
 			InitializeComponent();
+			ImageMaze.DataContext = converter;
 		}
-
 		private void ButtonNextStep_Click(object sender, RoutedEventArgs e)
 		{
 			signal.Set();
@@ -78,7 +78,7 @@ namespace MazeGenerator
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
 			TextBlockPaths.Text = $"Paths: {(generator as Searcher)?.paths.Count}";
-			ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
+			converter.Convert((dynamic)generator);
 			UpdateListOfPathes();
 		}
 		private void OnPreGenerating()
@@ -107,7 +107,7 @@ namespace MazeGenerator
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
 			TextBlockSizes.Text = $"{generator.height} x {generator.width}";
-			ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
+			converter.Convert((dynamic)generator);
 			UpdateListOfPathes();
 		}
 		private void OnCancel()
@@ -126,7 +126,10 @@ namespace MazeGenerator
 			SetIsEnabled(CheckBoxSteps, true);
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
-			ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
+			TextBlockStatus.Text = "Canceled";
+			TextBlockPaths.Text = "";
+			TextBlockSizes.Text = "";
+			converter.Convert((dynamic)generator);
 		}
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
@@ -175,7 +178,7 @@ namespace MazeGenerator
 			bool[] paths = new bool[items.Count];
 			for (int i = 0; i < paths.Length; ++i)
 				paths[i] = (bool)((items[i] as ListBoxItem).Content as CheckBox).IsChecked;
-			ImageMaze.Source = (generator as Searcher).ToBitmap(wallPx, cellPx, paths);
+			converter.Convert((dynamic)generator);
 		}
 		private void OnNextStep(string msg)
 		{
@@ -185,8 +188,7 @@ namespace MazeGenerator
 			else if (msg == "Search has ended")
 				OnEndSearch();
 			else if (signal != null)
-				//bitmap = generator.ToBitmap(wallPx, cellPx);
-				ImageMaze.Source = generator.ToBitmap(wallPx, cellPx);
+				converter.Convert((dynamic)generator);
 		}
 		private void UpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) =>
 			SetIsEnabled(ButtonGenerate, UpDownHeight?.Value != null && UpDownWidth?.Value != null);
@@ -205,14 +207,9 @@ namespace MazeGenerator
 
 		}
 
-		private void MenuItemSettings_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
 		private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
 		{
-
+			
 		}
 
 		private void ButtonCancel_Click(object sender, RoutedEventArgs e)
