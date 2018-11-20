@@ -205,7 +205,7 @@ namespace MazeGenerator
 				ListBoxItem lbi = new ListBoxItem();
 				CheckBox check = new CheckBox();
 				lbi.Margin = new Thickness(2, 2, 2, 0);
-				check.Content = $"Шляхів {i + 1}";
+				check.Content = $"Шлях {i + 1}";
 				check.IsChecked = true;
 				check.Click += ChangeVisiblePaths;
 				lbi.Content = check;
