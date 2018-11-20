@@ -32,21 +32,21 @@
         </Style>
         <!--Next Step Button Style-->
         <Style x:Key="ButtonNextStepStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
-            <Setter Property="Content" Value="Next Step"/>
+            <Setter Property="Content" Value="Наступний крок"/>
             <Setter Property="IsDefault" Value="True"/>
             <EventSetter Event="Click" Handler="ButtonNextStep_Click"/>
         </Style>
         <!--Generate Button Style-->
         <Style x:Key="ButtonGenerateStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
             <Style.Setters>
-                <Setter Property="Content" Value="Generate"/>
+                <Setter Property="Content" Value="Згенерувати"/>
                 <EventSetter Event="Click" Handler="ButtonGenerate_Click"/>
             </Style.Setters>
         </Style>
         <!--Search Button Style-->
         <Style x:Key="ButtonSearchStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
             <Style.Setters>
-                <Setter Property="Content" Value="Search"/>
+                <Setter Property="Content" Value="Знайти шляхи"/>
                 <EventSetter Event="Click" Handler="ButtonSearch_Click"/>
             </Style.Setters>
         </Style>
@@ -54,13 +54,13 @@
     <DockPanel>
         <!--Menu-->
         <Menu VerticalAlignment="Top" Height="Auto" DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="Export to" IsEnabled="False" x:Name="MenuItemExportTo">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Експортувати" IsEnabled="False" x:Name="MenuItemExportTo">
                     <MenuItem Header="Bitmap" x:Name="MenuItemBitmap" Click="MenuItemBitmap_Click"/>
                 </MenuItem>
-                <MenuItem Header="Exit" x:Name="MenuItemExit" Click="MenuItemExit_Click"/>
+                <MenuItem Header="Вихід" x:Name="MenuItemExit" Click="MenuItemExit_Click"/>
             </MenuItem>
-            <MenuItem Header="Help" x:Name="MenuItemHelp" Click="MenuItemHelp_Click"/>
+            <MenuItem Header="Допомога" x:Name="MenuItemHelp" Click="MenuItemHelp_Click"/>
         </Menu>
         <!--Status Bar-->
         <StatusBar DockPanel.Dock="Bottom">
@@ -78,7 +78,7 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Padding="3, 0, 3, 2" Grid.Column="0">
-                <TextBlock x:Name="TextBlockStatus" Text="Ready"/>
+                <TextBlock x:Name="TextBlockStatus" Text="Готовий"/>
             </StatusBarItem>
             <Separator Grid.Column="1"/>
             <StatusBarItem Padding="3, 0, 3, 2" Grid.Column="2">
@@ -114,7 +114,7 @@
                                             Watermark="Width" x:Name="UpDownWidth"
                                             DockPanel.Dock="Top"/>
                         <!--Steps-->
-                        <CheckBox Content="Show steps" IsThreeState="False" IsChecked="False"
+                        <CheckBox Content="Показувати кроки" IsThreeState="False" IsChecked="False"
                                   DockPanel.Dock="Top" x:Name="CheckBoxSteps"/>
                         <!--Generate-->
                         <Button x:Name="ButtonGenerate"
@@ -126,7 +126,7 @@
                                 Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsEnabled="False"
                                 Style="{StaticResource ButtonSearchStyle}"/>
                         <!--Cancel-->
-                        <Button x:Name="ButtonCancel" Style="{StaticResource ButtonStyle}" Content="Cancel"
+                        <Button x:Name="ButtonCancel" Style="{StaticResource ButtonStyle}" Content="Скасувати"
                                 Margin="0, 5, 0, 0" DockPanel.Dock="Top" IsCancel="True" IsEnabled="False"
                                 Click="ButtonCancel_Click"/>
                         <ListBox x:Name="ListBoxPaths" Margin="0, 5, 0, 0"/>

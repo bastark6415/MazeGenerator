@@ -42,7 +42,7 @@ namespace MazeGenerator.Searchers
 		/// Start Search Async
 		/// </summary>
 		/// <remarks>
-		///		This function creates a new task with async thread
+		///		This function creates a new task with async thread. If signal is null steps will skip
 		///	</remarks>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
 		/// <param name="progress">Progress for showing step by step execution</param>
@@ -54,7 +54,7 @@ namespace MazeGenerator.Searchers
 		///		SearchAsync. This function is execute in separate thread.
 		/// </summary>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
-		/// <param name="progress">Protress for showing step by step te</string></param>
+		/// <param name="progress">Protress for showing step by step></param>
 		/// <param name="signal">Variable for synchronization</param>
 		/// <exception cref="System.ObjectDisposedException">Throws when token disposed</exception>
 		protected abstract void SearchAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal);

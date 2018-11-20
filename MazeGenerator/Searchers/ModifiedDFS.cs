@@ -25,7 +25,7 @@ namespace MazeGenerator.Searchers
 		{
 			paths.Clear();
 			//Progress
-			progress?.Report("Searching...");
+			progress?.Report("Пошук...");
 			signal?.Reset();
 			signal?.WaitOne();
 			try
@@ -38,10 +38,12 @@ namespace MazeGenerator.Searchers
 			}
 			catch (ObjectDisposedException ex)
 			{
+				progress?.Report("Помилка");
+				signal?.Dispose();
 				throw ex;
 			}
 			//Progress
-			progress?.Report("Search has ended");
+			progress?.Report("Пошук закінчився");
 			signal?.Dispose();
 		}
 		private void DFS(CancellationToken token, IProgress<string> progress, ManualResetEvent signal, Point pnt, Path path)
@@ -68,7 +70,7 @@ namespace MazeGenerator.Searchers
 				LinkedList<Path> tmpPaths = paths;
 				paths = new LinkedList<Path>();
 				paths.AddLast(path);
-				progress?.Report("Searching...");
+				progress?.Report("Пошук...");
 				signal.Reset();
 				signal.WaitOne();
 				paths = tmpPaths;
@@ -96,7 +98,7 @@ namespace MazeGenerator.Searchers
 				LinkedList<Path> tmpPaths = paths;
 				paths = new LinkedList<Path>();
 				paths.AddLast(path);
-				progress?.Report("Searching...");
+				progress?.Report("Пошук...");
 				signal.Reset();
 				signal.WaitOne();
 				paths = tmpPaths;

@@ -25,6 +25,7 @@ namespace MazeGenerator.Generate
 		/// </summary>
 		/// <remarks>
 		///		This method realized Eller's algorithm for generating.
+		///		Possible message to progress: Generating..., Generated, Crashed.
 		/// </remarks>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
 		/// <param name="progress">Protress for showing step by step</param>
@@ -51,7 +52,7 @@ namespace MazeGenerator.Generate
 				SetWall(Direction.down, true, height - 1, j);
 			}
 			//Progress
-			progress?.Report("Generating...");
+			progress?.Report("Генерація...");
 			signal?.Reset();
 			signal?.WaitOne();
 			//Internal walls
@@ -68,6 +69,8 @@ namespace MazeGenerator.Generate
 				}
 				catch (ObjectDisposedException ex)
 				{
+					progress?.Report("Помилка");
+					signal?.Dispose();
 					throw ex;
 				}
 				//Assign for each cell unique set if it hasn't
@@ -98,7 +101,7 @@ namespace MazeGenerator.Generate
 					//Progress
 					if (signal != null)
 					{
-						progress?.Report("Generating...");
+						progress?.Report("Генерація...");
 						signal.Reset();
 						signal.WaitOne();
 					}
@@ -122,7 +125,7 @@ namespace MazeGenerator.Generate
 					//Progress
 					if (signal != null)
 					{
-						progress?.Report("Generating...");
+						progress?.Report("Генерація...");
 						signal.Reset();
 						signal.WaitOne();
 					}
@@ -151,7 +154,7 @@ namespace MazeGenerator.Generate
 					//Progress
 					if (signal != null)
 					{
-						progress?.Report("Generating...");
+						progress?.Report("Генерація...");
 						signal.Reset();
 						signal.WaitOne();
 					}
@@ -203,7 +206,7 @@ namespace MazeGenerator.Generate
 					SetWall(Direction.up, false, finish.y, finish.x);
 					break;
 			}
-			progress?.Report("Generated");
+			progress?.Report("Згенеровано");
 			signal?.Dispose();
 		}
 	}

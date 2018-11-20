@@ -88,7 +88,8 @@ namespace MazeGenerator.Generate
 		/// Start Generate Async
 		/// </summary>
 		/// <remarks>
-		///		This function creates a new task with async thread
+		///		This function creates a new task with async thread. If signal is null
+		///		steps will skip
 		///	</remarks>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
 		/// <param name="progress">Progress for showing step by step execution</param>
@@ -116,11 +117,10 @@ namespace MazeGenerator.Generate
 		/// <param name="value">True of False. Value for wall</param>
 		/// <param name="y">Y coordinate</param>
 		/// <param name="x">X coordinate</param>
-		/// <exception cref="System.ArgumentOutOfRangeException">Throws when coordinates not suitable for this maze</exception>
 		protected void SetWall(Direction dir, bool value, int y, int x)
 		{
 			if (y >= height || x >= width || y < 0 || x < 0)
-				throw new ArgumentOutOfRangeException("x or y", "Coordinate must be not negative and less than size of maze");
+				return;
 			switch (dir)
 			{
 				case Direction.left:
