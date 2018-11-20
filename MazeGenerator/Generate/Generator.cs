@@ -74,7 +74,7 @@ namespace MazeGenerator.Generate
 		///	</remarks>
 		/// <param name="height">An integer value</param>
 		/// <param name="width"> An integer value></param>
-		/// <exception cref="System.ArgumentNullException">Throws if sizes are </exception>
+		/// <exception cref="System.ArgumentNullException">Throws if sizes are not suitable</exception>
 		public Generator(int height, int width)
 		{
 			if (height < 0 || width < 0 || height > maxDimension || width > maxDimension)
@@ -88,16 +88,16 @@ namespace MazeGenerator.Generate
 		/// Start Generate Async
 		/// </summary>
 		/// <remarks>
-		///		This function creates a new task with ayck thread
+		///		This function creates a new task with acynk thread
 		///	</remarks>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
-		/// <param name="progress">Protress<string> for showing step by step te</string></param>
-		/// <param name="signal">Variable for sogne</param>
-		/// <returns>Returns new Task for this open</returns>
+		/// <param name="progress">Progress for showing step by step execution</param>
+		/// <param name="signal">Variable for syncronization</param>
+		/// <returns>Returns new Task</returns>
 		public virtual Task Generate(CancellationToken token, IProgress<string> progress, ManualResetEvent signal) =>
 			Task.Run(() => GenerateAsync(token, progress, signal));
 		/// <summary>
-		///		GenerateAsync. This function is execute in separate thread).
+		///		GenerateAsync. This function is execute in separate thread.
 		/// </summary>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
 		/// <param name="progress">Protress<string> for showing step by step te</string></param>

@@ -10,20 +10,41 @@ namespace MazeGenerator.Generate
 {
     public class EllerAlgorithm : Generator
     {
+		/// <summary>
+		/// Constructor of <c>EllerAlgorithm</c>
+		/// </summary>
+		/// <remarks>
+		/// Fills fields of <c>EllerAlgorithm</c>
+		///	</remarks>
+		/// <param name="height">An integer value</param>
+		/// <param name="width"> An integer value></param>
+		/// <exception cref="System.ArgumentNullException">Throws if sizes are not suitable</exception>
 		public EllerAlgorithm(int height, int width) : base(height, width) { }
+		/// <summary>
+		///		GenerateAsync. This function is execute in separate thread.
+		/// </summary>
+		/// <remarks>
+		///		This method realized Eller's algorithm for generating.
+		/// </remarks>
+		/// <param name="token">Cancellation Token for cancelling thread</param>
+		/// <param name="progress">Protress<string> for showing step by step te</string></param>
+		/// <param name="signal">Variable for sogne</param>
+		/// <exception cref="System.ObjectDisposedException">Throws when token disposed</exception>
 		protected override void GenerateAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
+			//Current row with numbers of sets
 			int[] currRow = new int[width];
+			//Set
 			bool[] usedSet = new bool[width + 1];
 			Random rand = new Random();
-			//external walls
-			//left and right
+			//External walls
+			//Left and Right
 			for (int i = 0; i < height; ++i)
 			{
 				SetWall(Direction.left, true, i, 0);
 				SetWall(Direction.right, true, i, width - 1);
 			}
-			//up and down
+			//Up and Down
 			for (int j = 0; j < width; ++j)
 			{
 				SetWall(Direction.up, true, 0, j);
@@ -49,7 +70,7 @@ namespace MazeGenerator.Generate
 				{
 					throw ex;
 				}
-				//assign for each cell unique set if it hasn't
+				//Assign for each cell unique set if it hasn't
 				for (int j = 0; j < width; ++j)
 					if (currRow[j] == 0)
 						for (int k = 1; k <= width; ++k)
@@ -59,7 +80,7 @@ namespace MazeGenerator.Generate
 								currRow[j] = k;
 								break;
 							}
-				//create right walls
+				//Create right walls
 				for (int j = 0; j < width - 1; ++j)
 				{
 					if (currRow[j] == currRow[j + 1])
@@ -82,7 +103,7 @@ namespace MazeGenerator.Generate
 						signal.WaitOne();
 					}
 				}
-				//create down walls
+				//Create down walls
 				for (int l = 1; l <= width; ++l)
 				{
 					if (!usedSet[l])
@@ -106,10 +127,10 @@ namespace MazeGenerator.Generate
 						signal.WaitOne();
 					}
 				}
-				//update used set
+				//Update used set
 				for (int j = 1; j <= width; ++j)
 					usedSet[j] = false;
-				//remove cells with down walls from set
+				//Remove cells with down walls from set
 				for (int j = 0; j < width; ++j)
 					if (mapMatrix[i, j].down)
 						currRow[j] = 0;
@@ -119,7 +140,7 @@ namespace MazeGenerator.Generate
 			//Random walls removing
 			if (height > 2 && width > 2)
 			{
-				int cntWalls = height * width <= 10000 ? 1 : (int)Math.Round(height * width * 0.0001);
+				int cntWalls = height * width <= 5000 ? 1 : (int)Math.Round(height * width * 0.0002);
 				Point p;
 				for (int i = 0; i < cntWalls; ++i)
 				{
@@ -136,7 +157,7 @@ namespace MazeGenerator.Generate
 					}
 				}
 			}
-			//random start finish
+			//Random Start & Finish
 			Direction dir = (Direction)rand.Next(4);
 			Point tmp;
 			switch (dir)
