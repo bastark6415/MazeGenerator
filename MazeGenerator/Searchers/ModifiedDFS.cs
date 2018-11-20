@@ -36,11 +36,11 @@ namespace MazeGenerator.Searchers
 			{
 				return;
 			}
-			catch (ObjectDisposedException ex)
+			catch (ObjectDisposedException)
 			{
 				progress?.Report("Помилка");
 				signal?.Dispose();
-				throw ex;
+				throw;
 			}
 			//Progress
 			progress?.Report("Пошук закінчився");
@@ -53,13 +53,13 @@ namespace MazeGenerator.Searchers
 			{
 				token.ThrowIfCancellationRequested();
 			}
-			catch (OperationCanceledException ex)
+			catch (OperationCanceledException)
 			{
-				throw ex;
+				throw;
 			}
-			catch (ObjectDisposedException ex)
+			catch
 			{
-				throw ex;
+				throw;
 			}
 			//Marked that we visited this point and add it to path
 			visited[pnt.y, pnt.x] = true;

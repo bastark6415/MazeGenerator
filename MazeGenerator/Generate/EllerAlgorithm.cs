@@ -67,11 +67,11 @@ namespace MazeGenerator.Generate
 				{
 					return;
 				}
-				catch (ObjectDisposedException ex)
+				catch (ObjectDisposedException)
 				{
 					progress?.Report("Помилка");
 					signal?.Dispose();
-					throw ex;
+					throw;
 				}
 				//Assign for each cell unique set if it hasn't
 				for (int j = 0; j < width; ++j)

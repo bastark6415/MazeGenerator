@@ -124,6 +124,8 @@ namespace MazeGenerator
 			SetIsEnabled(UpDownWidth, true);
 			SetIsEnabled(UpDownHeight, true);
 			SetIsEnabled(ButtonCancel, false);
+			if (((Searcher)generator).paths.Count == 0)
+				System.Windows.MessageBox.Show("Шляхів не існує");
 			TextBlockPaths.Text = $"Шляхів: {((Searcher)generator).paths.Count}";
 			ConvertToBitmapAndCatchException();
 			UpdateListOfPathes();
@@ -422,7 +424,7 @@ namespace MazeGenerator
 				else
 					converter.Convert((Searcher)generator, paths);
 			}
-			catch (ArgumentNullException ex)
+			catch (ArgumentNullException)
 			{
 				System.Windows.MessageBox.Show("Об'єкт генератор або пошук не існує або ще не створений",
 			"Нульові аргументи", MessageBoxButton.OK, MessageBoxImage.Warning);
