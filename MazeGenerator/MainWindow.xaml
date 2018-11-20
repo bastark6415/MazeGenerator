@@ -136,14 +136,13 @@
             <ScrollViewer Grid.Column="1"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">
-                <Viewbox Stretch="None">
+                <Viewbox Stretch="None" UseLayoutRounding="True" SnapsToDevicePixels="True">
                     <Viewbox.LayoutTransform>
                         <ScaleTransform ScaleX="{Binding ElementName=SliderZoom, Path=Value}" 
                                         ScaleY="{Binding ElementName=SliderZoom, Path=Value}"/>
                     </Viewbox.LayoutTransform>
                     <Image RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderOptions.EdgeMode="Aliased"
-                           SnapsToDevicePixels="True"
                            x:Name="ImageMaze"
                            Source="{Binding Path=Bitmap, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, AsyncState=True}"/>
                 </Viewbox>
