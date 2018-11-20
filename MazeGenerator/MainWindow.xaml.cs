@@ -278,7 +278,7 @@ namespace MazeGenerator
 			bool[] paths = new bool[items.Count];
 			for (int i = 0; i < paths.Length; ++i)
 				paths[i] = (bool)((items[i] as ListBoxItem).Content as CheckBox).IsChecked;
-			ConvertToBitmapAndCatchException();
+			ConvertToBitmapAndCatchException(paths);
 		}
 		/// <summary>
 		/// Say cancellation token that can exit. Calling UI interaction after that
