@@ -14,7 +14,13 @@ namespace MazeGenerator.Searchers
 	public class ModifiedDFS : Searcher
 	{
 		public ModifiedDFS(Generator generator) : base(generator) { }
-
+		/// <summary>
+		///		SearchAsync. This function is execute in separate thread.
+		/// </summary>
+		/// <param name="token">Cancellation Token for cancelling thread</param>
+		/// <param name="progress">Protress for showing step by step</param>
+		/// <param name="signal">Variable for synchronization</param>
+		/// <exception cref="System.ObjectDisposedException">Throws when token disposed</exception>
 		protected override void SearchAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
 			paths.Clear();
@@ -53,6 +59,7 @@ namespace MazeGenerator.Searchers
 			{
 				throw ex;
 			}
+			//Marked that we visited this point and add it to path
 			visited[pnt.y, pnt.x] = true;
 			path.AddLast(pnt);
 			//Progress
@@ -67,18 +74,20 @@ namespace MazeGenerator.Searchers
 				paths = tmpPaths;
 			}
 			if (pnt == finish)
-				paths.AddLast(new Path(path));
+				paths.AddLast(new Path(path)); //Found path, add to list of paths and continue search;
 			else
 			{
-					if (!mapMatrix[pnt.y, pnt.x].left && pnt.x > 0 && !visited[pnt.y, pnt.x - 1])
-						DFS(token, progress, signal, new Point(pnt.x - 1, pnt.y), path);
-					if (!mapMatrix[pnt.y, pnt.x].up && pnt.y > 0 && !visited[pnt.y - 1, pnt.x])
-						DFS(token, progress, signal, new Point(pnt.x, pnt.y - 1), path);
-					if (!mapMatrix[pnt.y, pnt.x].right && pnt.x < width - 1 && !visited[pnt.y, pnt.x + 1])
-						DFS(token, progress, signal, new Point(pnt.x + 1, pnt.y), path);
-					if (!mapMatrix[pnt.y, pnt.x].down && pnt.y < height - 1 && !visited[pnt.y + 1, pnt.x])
-						DFS(token, progress, signal, new Point(pnt.x, pnt.y + 1), path);
+				//Checking adjacent cells, if it is blenk go there
+				if (!mapMatrix[pnt.y, pnt.x].left && pnt.x > 0 && !visited[pnt.y, pnt.x - 1])
+					DFS(token, progress, signal, new Point(pnt.x - 1, pnt.y), path);
+				if (!mapMatrix[pnt.y, pnt.x].up && pnt.y > 0 && !visited[pnt.y - 1, pnt.x])
+					DFS(token, progress, signal, new Point(pnt.x, pnt.y - 1), path);
+				if (!mapMatrix[pnt.y, pnt.x].right && pnt.x < width - 1 && !visited[pnt.y, pnt.x + 1])
+					DFS(token, progress, signal, new Point(pnt.x + 1, pnt.y), path);
+				if (!mapMatrix[pnt.y, pnt.x].down && pnt.y < height - 1 && !visited[pnt.y + 1, pnt.x])
+					DFS(token, progress, signal, new Point(pnt.x, pnt.y + 1), path);
 			}
+			//Go back
 			visited[pnt.y, pnt.x] = false;
 			path.RemoveLast();
 			//Progress

@@ -17,6 +17,11 @@ namespace MazeGenerator.Additional
 	public class ConverterToBitmap : INotifyPropertyChanged
 	{
 		private BitmapSource bitmap;
+		/// <value>
+		/// Get Bitmap. If set call OnPropertyChancged
+		/// Constructor
+		/// 
+		/// </value>
 		public BitmapSource Bitmap 
 		{ 
 			get { return bitmap; }
@@ -36,6 +41,12 @@ namespace MazeGenerator.Additional
 				Colors.Green, Colors.Red, Colors.Violet, Colors.Orange, Colors.Pink,
 				Colors.OrangeRed, Colors.Salmon, Colors.Tomato, Colors.Silver, Colors.PeachPuff,
 				Colors.Navy, Colors.BurlyWood };
+		/// <summary>
+		///		InitializeCovered Colors
+		/// </summary>
+		/// <param name="wallPx">As int</param>
+		/// <param name="cellPx">As int</param>
+		/// <exception cref="System.ArgumentOutOfRangeException";
 		public ConverterToBitmap(int wallPx, int cellPx) 
 		{
 			if (wallPx <= 0 || cellPx <= 0)
@@ -45,10 +56,25 @@ namespace MazeGenerator.Additional
 			for (int i = 0; i < colors.Length; ++i)
 				colors[i].A = 200;
 		}
+		/// <summary>
+		/// Update binding to this object
+		/// </summary>
+		/// <param name="prop">PropertyEvent</param>
 		public void OnPropertyChanged(string prop)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 		}
+		/// <summary>
+		/// SetPixelColor in input parameters
+		/// </summary>
+		/// <param name="pixels">Input colors</param>
+		/// <param name="c">Color to set</param>
+		/// <param name="yOfCell">y in maze map</param>s
+		/// <param name="xOfCell">x in maze map</param>
+		/// <param name="yInCell">y in cell</param>
+		/// <param name="xInCell">x in cell</param>
+		/// <param name="stride">stride</param>
+		/// <exception cref="System.ArgumentNullException";
 		protected void SetPixelColor(ref byte[] pixels, Color c, int yOfCell, int xOfCell, int yInCell, int xInCell, int stride)
 		{
 			int colorIndex = (wallPx + cellPx) * (yOfCell * stride + xOfCell * 4) + yInCell * stride + xInCell * 4;
@@ -59,6 +85,17 @@ namespace MazeGenerator.Additional
 			pixels[colorIndex + 2] = c.R;
 			pixels[colorIndex + 3] = c.A;
 		}
+		/// <summary>
+		/// SetPixelColor in input parameters
+		/// </summary>
+		/// <param name="pixels">Input colors</param>
+		/// <param name="yOfCell">y in maze map</param>s
+		/// <param name="xOfCell">x in maze map</param>
+		/// <param name="yInCell">y in cell</param>
+		/// <param name="xInCell">x in cell</param>
+		/// <param name="stride">stride</param>
+		/// <returns>Color of pixel</returns>
+		/// <exception cref="System.ArgumentNullException";
 		protected Color GetPixelColor(ref byte[] pixels, int yOfCell, int xOfCell, int yInCell, int xInCell, int stride)
 		{
 			int colorIndex = (wallPx + cellPx) * (yOfCell * stride + xOfCell * 4) + yInCell * stride + xInCell * 4;
@@ -71,6 +108,11 @@ namespace MazeGenerator.Additional
 			c.A = pixels[colorIndex + 3];
 			return c;
 		}
+		/// <summary>
+		/// Sets Bitmap by converting <c>Generator</c> to Bitmap
+		/// </summary>
+		/// <param name="generator">Generator to Bitmap</param>
+		/// <exception cref="System.ArgumentNullException">Trow if generator null</exception>
 		public void Convert(Generator generator)
 		{
 			if (generator == null)
@@ -125,6 +167,11 @@ namespace MazeGenerator.Additional
 				}
 			Bitmap = BitmapSource.Create(width, height, 96.0, 96.0, pf, null, pixels, stride);
 		}
+		/// <summary>
+		/// Sets Bitmap by converting <c>Searcher</c> to Bitmap
+		/// </summary>
+		/// <param name="searcher"><c>Searcher</c> to Bitmap</param>
+		/// <exception cref="System.ArgumentNullException">Trow if searcher null</exception>
 		public void Convert(Searcher searcher)
 		{
 			if (searcher == null)
@@ -134,9 +181,15 @@ namespace MazeGenerator.Additional
 				allPaths[i] = true;
 			Convert(searcher, allPaths);
 		}
+		/// <summary>
+		/// Sets Bitmap by converting <c>Searcher</c> to Bitmap
+		/// </summary>
+		/// <param name="searcher"><c>Searcher</c> to Bitmap</param>
+		/// <param name="pathsForShow"
+		/// <exception cref="System.ArgumentNullException">Trow if searcher null</exception>
 		public void Convert(Searcher searcher, bool[] pathsForShow)
 		{
-			if (searcher == null)
+			if (searcher == null || pathsForShow == null)
 				throw new ArgumentNullException("searcher", "Argument can't be null");
 			Convert(searcher.generator);
 			PixelFormat pf = PixelFormats.Bgra32;
@@ -168,6 +221,20 @@ namespace MazeGenerator.Additional
 			}
 			Bitmap = BitmapSource.Create(width, height, 96, 96, pf, null, pixels, stride);
 		}
+		/// <summary>
+		/// Save Bitmap
+		/// </summary>
+		/// <param name="path">Path to save</param>
+		/// <exception cref="System.ArgumentException"></exception>
+		/// <exception cref="System.NotSupportedException"></exception>
+		/// <exception cref="System.ArgumentNullException"></exception>
+		/// <exception cref="System.Security.SecurityException"></exception>
+		/// <exception cref="System.IO.FileNotFoundException"></exception>
+		/// <exception cref="System.IO.IOException"></exception>
+		/// <exception cref="System.IO.DirectoryNotFoundException"></exception>
+		/// <exception cref="System.IO.PathTooLongException"></exception>
+		/// <exception cref="System.ArgumentOutOfRangeException"></exception>
+		/// <exception cref="System.InvalidOperationException"></exception>
 		public void SaveToFile(string path)
 		{
 			BmpBitmapEncoder encoder = new BmpBitmapEncoder();

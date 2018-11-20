@@ -27,8 +27,8 @@ namespace MazeGenerator.Generate
 		///		This method realized Eller's algorithm for generating.
 		/// </remarks>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
-		/// <param name="progress">Protress<string> for showing step by step te</string></param>
-		/// <param name="signal">Variable for sogne</param>
+		/// <param name="progress">Protress for showing step by step</param>
+		/// <param name="signal">Variable for syncronization</param>
 		/// <exception cref="System.ObjectDisposedException">Throws when token disposed</exception>
 		protected override void GenerateAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{

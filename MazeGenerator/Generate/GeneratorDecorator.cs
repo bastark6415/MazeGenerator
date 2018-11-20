@@ -50,8 +50,8 @@ namespace MazeGenerator.Generate
 		/// <c>GeneratorDecorator</c> hides functionality of parent <c>Generator</c>
 		/// </remarks>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
-		/// <param name="progress">Protress<string> for showing step by step te</string></param>
-		/// <param name="signal">Variable for sogne</param>
+		/// <param name="progress">Protress for showing step by step</param>
+		/// <param name="signal">Variable for syncronization</param>
 		/// <exception cref="System.NotImplementedException">Throws always when called GenerateAsync</exception>
 		sealed protected override void GenerateAsync(CancellationToken token, IProgress<string> progress, ManualResetEvent signal)
 		{
@@ -61,7 +61,7 @@ namespace MazeGenerator.Generate
 		/// Start Generate Async
 		/// </summary>
 		/// <remarks>
-		///		This function creates a new task with acynk thread
+		///		This function creates a new task with async thread
 		///	</remarks>
 		/// <param name="token">Cancellation Token for cancelling thread</param>
 		/// <param name="progress">Progress for showing step by step execution</param>
