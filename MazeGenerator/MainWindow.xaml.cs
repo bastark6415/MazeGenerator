@@ -221,5 +221,11 @@ namespace MazeGenerator
 		{
 
 		}
+
+		private void MenuItemExit_Click(object sender, RoutedEventArgs e)
+		{
+			cancellationToken?.Cancel();
+			Close();
+		}
 	}
 }

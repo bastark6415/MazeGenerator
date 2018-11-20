@@ -25,9 +25,6 @@ namespace MazeGenerator.Types
 		/// <summary>
 		/// Constructor of <c>Path</c>.
 		/// </summary>
-		/// <remarks>
-		/// Creates new LinkedList.
-		/// </remarks>
 		public Path()
 		{
 			path = new LinkedList<Point>();
@@ -64,16 +61,16 @@ namespace MazeGenerator.Types
 		/// Check if point <paramref name="p"/> belongs to path.
 		/// </summary>
 		/// <remarks>
-		/// <paramref name="p"/> compared for each point in.
+		/// <paramref name="p"/> compared for each point in path.
 		/// </remarks>
 		/// <param name="p">Point that should be search.</param>
 		/// <returns>Return true if path contains<paramref name="p"/> </returns>
 		public bool ContainsPoint(Point p) => path.Contains(p);
 		/// <summary>
-		/// Removes all points from path
+		/// Clear.
 		/// </summary>
 		/// <remarks>
-		/// Clean paths
+		/// Removes all points from path.
 		/// </remarks>
 		public void Clear() => path.Clear();
     }

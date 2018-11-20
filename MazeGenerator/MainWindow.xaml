@@ -58,6 +58,7 @@
                 <MenuItem Header="Export to" IsEnabled="False" x:Name="MenuItemExportTo">
                     <MenuItem Header="Bitmap" x:Name="MenuItemBitmap" Click="MenuItemBitmap_Click"/>
                 </MenuItem>
+                <MenuItem Header="Exit" x:Name="MenuItemExit" Click="MenuItemExit_Click"/>
             </MenuItem>
             <MenuItem Header="Help" x:Name="MenuItemHelp" Click="MenuItemHelp_Click"/>
         </Menu>
