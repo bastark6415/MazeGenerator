@@ -153,6 +153,7 @@ namespace MazeGenerator
 			TextBlockPaths.Text = "";
 			TextBlockSizes.Text = "";
 			ConvertToBitmapAndCatchException();
+			UpdateListOfPathes();
 		}
 		/// <summary>
 		/// UI Interacton after catching exception from generateAsync or searchAsync
