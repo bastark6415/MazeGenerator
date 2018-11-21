@@ -18,7 +18,7 @@ namespace MazeGenerator.Generate
 	/// <para>
 	///	This class doesn't have an implementation Generate.
 	///	When you inherit the <c>Generator</c> you have to impletment Generate mehod,
-	///	to prevent new class become abstrack
+	///	to prevent new class become abstract
 	///	</para>
 	/// </remarks>
 	public abstract class Generator

@@ -14,13 +14,18 @@ using System.Runtime.CompilerServices;
 
 namespace MazeGenerator.Additional
 {
+	/// <summary>
+	/// <c>ConverterToBitmap</c> convert <c>Generator</c> map to <c>BitmapSource</c>.
+	/// </summary>
+	/// <remarks>
+	/// Has a colors array for paths from <c>Searcher</c>.
+	/// Has a PropertyChanged Event that called always when bitmap changing.
+	/// </remarks>
 	public class ConverterToBitmap : INotifyPropertyChanged
 	{
 		private BitmapSource bitmap;
 		/// <value>
-		/// Get Bitmap. If set call OnPropertyChancged
-		/// Constructor
-		/// 
+		/// Get Bitmap. If set call OnPropertyChancged.
 		/// </value>
 		public BitmapSource Bitmap 
 		{ 
