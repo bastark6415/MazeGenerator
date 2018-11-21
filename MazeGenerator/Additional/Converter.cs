@@ -42,10 +42,9 @@ namespace MazeGenerator.Additional
 		public event PropertyChangedEventHandler PropertyChanged;
 		public int wallPx { get; protected set; }
 		public int cellPx { get; protected set; }
-		protected readonly Color[] colors = new Color[] {Colors.Blue, Colors.Coral, Colors.Cyan,
-				Colors.Green, Colors.Red, Colors.Violet, Colors.Orange, Colors.Pink,
-				Colors.OrangeRed, Colors.Salmon, Colors.Tomato, Colors.Silver, Colors.PeachPuff,
-				Colors.Navy, Colors.BurlyWood };
+		protected readonly Color[] colors = new Color[] {Colors.Red, Colors.Green, Colors.Violet, Colors.Orange,
+			Colors.GreenYellow, Color.FromRgb(255, 216, 0), Color.FromRgb(154, 159, 182),
+			Color.FromRgb(100, 65, 164), Color.FromRgb(0, 43, 82), Colors.Blue, Colors.Brown};
 		/// <summary>
 		///		InitializeCovered Colors
 		/// </summary>
