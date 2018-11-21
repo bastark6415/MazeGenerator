@@ -253,8 +253,19 @@ namespace MazeGenerator
 		private void ButtonSearch_Click(object sender, RoutedEventArgs e)
 		{
 			OnPreSearch();
-			if (!(generator is Searcher))
-				generator = new ModifiedDFS(generator);
+			try
+			{
+				if (!(generator is Searcher))
+					generator = new ModifiedDFS(generator);
+			}
+			catch (ArgumentNullException)
+			{
+				System.Windows.MessageBox.Show("Об'єкт генератор не існує або не створений",
+				"Нульові аргументи", MessageBoxButton.OK, MessageBoxImage.Warning);
+				TextBlockStatus.Text = "Помилка";
+				OnCrashed();
+				return;
+			}
 			Action<string> action;
 			if ((bool)CheckBoxSteps.IsChecked)
 			{
@@ -400,7 +411,12 @@ namespace MazeGenerator
 		/// <param name="e"></param>
 		private void MenuItemHelp_Click(object sender, RoutedEventArgs e)
 		{
-
+			if (File.Exists(Environment.CurrentDirectory + "\\Help.html"))
+				System.Diagnostics.Process.Start("Help.html");
+			else
+				System.Windows.MessageBox.Show($"Файл за шляхом:\n {Environment.CurrentDirectory}\\Help.html" +
+	$" не існує.\nПомістіть файл допомоги в одну директорію з виконавчим файлом.",
+							"Допомога не знайдена", MessageBoxButton.OK, MessageBoxImage.Warning);
 		}
 		/// <summary>
 		/// Exit.

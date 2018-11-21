@@ -24,6 +24,7 @@
             <Setter Property="MinWidth" Value="75"/>
             <Setter Property="MaxLength" Value="5"/>
             <Setter Property="ParsingNumberStyle" Value="Integer"/>
+            <Setter Property="ToolTip" Value="Maximum = 512"/>
             <EventSetter Event="ValueChanged" Handler="UpDown_ValueChanged"/>
         </Style>
         <!--General Button-->
@@ -108,10 +109,10 @@
                 <Border Margin="5, 5, 5, 5">
                     <DockPanel Margin="5" VerticalAlignment="Stretch" LastChildFill="True">
                         <!--Size-->
-                        <xctk:IntegerUpDown Watermark="Height" x:Name="UpDownHeight"
+                        <xctk:IntegerUpDown Watermark="Висота" x:Name="UpDownHeight"
                                             DockPanel.Dock="Top"/>
                         <xctk:IntegerUpDown Margin="0, 5"
-                                            Watermark="Width" x:Name="UpDownWidth"
+                                            Watermark="Ширина" x:Name="UpDownWidth"
                                             DockPanel.Dock="Top"/>
                         <!--Steps-->
                         <CheckBox Content="Показувати кроки" IsThreeState="False" IsChecked="False"

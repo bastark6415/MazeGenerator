@@ -41,6 +41,8 @@ namespace MazeGenerator.Generate
 		/// <param name="generator"><c>Generator</c> to decorate.</param>
 		public GeneratorDecorator(Generator generator) : base(0, 0)
 		{
+			if (generator == null)
+				throw new ArgumentNullException();
 			this.generator = generator;
 		}
 		/// <summary>
