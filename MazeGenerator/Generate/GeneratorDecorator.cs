@@ -41,9 +41,7 @@ namespace MazeGenerator.Generate
 		/// <param name="generator"><c>Generator</c> to decorate.</param>
 		public GeneratorDecorator(Generator generator) : base(0, 0)
 		{
-			if (generator == null)
-				throw new ArgumentNullException();
-			this.generator = generator;
+			this.generator = generator ?? throw new ArgumentNullException();
 		}
 		/// <summary>
 		///		GenerateAsync. This function is execute in separate thread.
